@@ -5,7 +5,7 @@ export default function Home() {
     return (
         <div className={styles.page}>
             Лендинг
-            <Link href="/payment">Оплата</Link>
+            <Link href="/game/payment">Оплата</Link>
         </div>
     );
 }

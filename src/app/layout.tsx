@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "../shared/assets/scss/index.scss";
 
 export const metadata: Metadata = {
   title: "Lovecoin",
