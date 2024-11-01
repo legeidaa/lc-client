@@ -1,5 +1,5 @@
+import Logo from "@/img/logo.svg";
 import Image from "next/image";
-import Logo from "@/assets/img/logo.svg";
 
 export default function Layout({
     children,
@@ -7,9 +7,9 @@ export default function Layout({
     children: React.ReactNode;
 }>) {
     return (
-        <>  
+        <>
             <header className="logo-container">
-                <Image src={Logo} alt="logo" width={570}/>
+                <Image width={570} src={Logo} alt="Логотип" />
             </header>
             <main>{children}</main>
         </>

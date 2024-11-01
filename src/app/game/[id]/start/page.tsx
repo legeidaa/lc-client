@@ -32,4 +32,18 @@
 //     );
 // }
 
-// если игр
+import RegistrationForms from "@/shared/components/RegistrationForms/RegistrationForms";
+import { StartInfo } from "@/shared/components/StartInfo/StartInfo";
+
+export default function Start() {
+    const currentUser = "player";
+    if (currentUser === "player") {
+        return (
+            <div className="container">
+                <RegistrationForms />
+            </div>
+        );
+    }
+
+    return <div className="container"> </div>;
+}

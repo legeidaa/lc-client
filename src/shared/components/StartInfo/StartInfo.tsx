@@ -1,6 +1,5 @@
-import Image from "next/image";
 import styles from "./StartInfo.module.scss";
-import ArrowImage from "@/assets/img/arrow.svg";
+import ArrowImage from "@/img/arrow.svg";
 
 export const StartInfo = () => {
     return (
@@ -11,7 +10,7 @@ export const StartInfo = () => {
                 болезненно
             </h2>
             <div className={styles.arrow}>
-                <Image src={ArrowImage} alt="" width={270} />
+                <img src={ArrowImage} alt="" width={270}/>
             </div>
             <ul className={styles.list}>
                 <li className={styles.listItem}>
