@@ -25,11 +25,6 @@ export const Input: FC<InputProps> = (props) => {
         ...otherProps
     } = props;
 
-    let classNames = `input__element input__element_${inputStyle}`;
-    if (onDelete) {
-        classNames += " input__element_delete";
-    }
-
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         onChange?.(e);
     };
@@ -47,7 +42,8 @@ export const Input: FC<InputProps> = (props) => {
                 <input
                     className={classnames(
                         styles.inputElement,
-                        styles["inputElement" + inputStyle]
+                        styles["inputElement" + inputStyle],
+                        { inputElementDelete: onDelete }
                     )}
                     onChange={onChangeHandler}
                     {...otherProps}

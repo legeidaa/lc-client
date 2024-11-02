@@ -1,9 +1,5 @@
 .input {
     position: relative;
-    
-    &__error {
-        margin-top: 10px;
-    }
 
     &__delete {
         cursor: pointer;
@@ -24,6 +20,15 @@
         margin-top: 150px;
         margin-bottom: 32px;
     }
+}
+.label {
+    &Wrapper {
+
+    }
+}
+
+.error {
+    margin-top: 10px;
 }
 
 .inputElement {
@@ -67,7 +72,7 @@
         width: 140px;
     }
 
-    &_delete {
+    &Delete {
         padding-right: 70px;
     }
 }
