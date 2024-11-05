@@ -5,10 +5,14 @@ interface SexRadioInputProps extends HTMLProps<HTMLInputElement> {
     type: "male" | "female";
     id: string;
     name: string;
-
 }
 
-export const SexRadioInput: FC<SexRadioInputProps> = ({ type, id, name, ...props }) => {
+export const SexRadioInput: FC<SexRadioInputProps> = ({
+    type,
+    id,
+    name,
+    ...props
+}) => {
     return (
         <label className={classNames(styles.label, styles[type])}>
             <input
@@ -19,6 +23,7 @@ export const SexRadioInput: FC<SexRadioInputProps> = ({ type, id, name, ...props
                 className={styles.input}
                 {...props}
             />
+            <span className={styles.checkmark}></span>
         </label>
     );
 };

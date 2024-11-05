@@ -1,0 +1,55 @@
+.label {
+    position: relative;
+    padding-left: 28px;
+    cursor: pointer;
+    line-height: 20px;
+    display: inline-block;
+    width: 42px;
+    height: 42px;
+    z-index: 1;
+
+    &::before {
+        content: 'M';
+        font-weight: 500;
+        font-size: 25px;
+        text-align: center;
+        color: #3213ee;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        border: 1px solid #3213ee;
+        border-radius: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &.female::before {
+        content: 'Ж';
+        border: 1px solid #ff3596;
+        color: #ff3596;
+    }
+}
+
+.input {
+    position: absolute;
+    left: -9999px;
+}
+
+.input:checked~.checkmark {
+    box-shadow: inset 0 0 0 5px var(--btn-active-bg);
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    transition: 0.15s ease-in-out;
+    background-color: var(--white);
+    z-index: -1;
+    border-radius: 50%;
+}
