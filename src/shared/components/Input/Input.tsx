@@ -2,7 +2,7 @@
 
 import { ChangeEvent, FC } from "react";
 import styles from "./Input.module.scss";
-import { CrossIcon } from "../Icons/CrossIcon";
+import { CrossIcon } from "../icons/CrossIcon";
 import classnames from "classnames";
 
 interface InputProps extends React.HTMLProps<HTMLInputElement> {

@@ -1,22 +1,35 @@
 "use client";
 
-import { FormEvent, useRef } from "react";
+import { FormEvent, use, useEffect, useRef } from "react";
 import { Input } from "../Input/Input";
 import { SexRadioInput } from "../SexRadioInput/SexRadioInput";
 import styles from "./RegistrationForms.module.scss";
 import classNames from "classnames";
+import { useLazyGetGameQuery } from "@/lib/redux/gameApi";
+import { useTypedSelector } from "@/lib/redux/hooks/useTypedSelector";
+import { useActions } from "@/lib/redux/hooks/useActions";
 
 export default function RegistrationForms() {
     const form = useRef<HTMLFormElement>(null);
+    const [trigger] = useLazyGetGameQuery();
+
+    const handleClick = async () => {
+        const data = await trigger("kVBP6UAukymJndgLmjRLGw", true);
+        console.log(data.data?.users);
+    };
+
     const handleSubmmit = (e: FormEvent) => {
         e.preventDefault();
         const formData = new FormData(form.current!);
-        // const formDataObj = {};
+        const formDataObj = {};
         // formData.forEach((value, key) => (formDataObj[key] = value));
         // console.log(formDataObj);
     };
     return (
         <form ref={form} onSubmit={handleSubmmit}>
+            <button type="button" onClick={handleClick}>
+                click
+            </button>
             <div className={styles.wrapper}>
                 <div className={styles.playerForm}>
                     <h3 className={styles.playerFormTitle}>
@@ -59,8 +72,8 @@ export default function RegistrationForms() {
 
                 <div className={styles.playerForm}>
                     <h3 className={styles.playerFormTitle}>
-                        Введите имя, пол, и электронную почта вашего{" "}
-                        <b>партнера</b>
+                        Введите имя, пол, и электронную почта вашего
+                        <b> партнера</b>
                     </h3>
                     <div className={styles.playerFormBlock}>
                         <Input
@@ -83,11 +96,13 @@ export default function RegistrationForms() {
                                 name="partner-sex"
                                 type="female"
                                 id="partner-female"
+                                required
                             />
                             <SexRadioInput
                                 name="partner-sex"
                                 type="male"
                                 id="partner-male"
+                                required
                             />
                         </div>
                     </div>

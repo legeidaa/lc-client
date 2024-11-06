@@ -1,22 +1,25 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { quizDataReducer } from "./quizDataSlice";
-import { loadState, saveState } from "./localStorage";
-
-const persistedState = loadState();
+import { gameInfoReducer } from "./gameSlice";
+import { gameApi } from "./gameApi";
+import { setupListeners } from "@reduxjs/toolkit/query";
 
 export const rootReducer = combineReducers({
-    quiz: quizDataReducer,
+    gameInfo: gameInfoReducer,
+    [gameApi.reducerPath]: gameApi.reducer,
 });
 
-export const store = configureStore({
-    reducer: rootReducer,
-    preloadedState: persistedState,
-    devTools: true,
-});
+export const makeStore = () => {
+    return configureStore({
+        reducer: rootReducer,
+        devTools: true,
+        middleware: (getDefaultMiddleware) =>
+            getDefaultMiddleware().concat(gameApi.middleware),
+    });
+};
+const store = makeStore();
 
-store.subscribe(() => {
-    saveState(store.getState());
-});
+setupListeners(store.dispatch);
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export type AppStore = ReturnType<typeof makeStore>;
+export type RootState = ReturnType<AppStore["getState"]>;
+export type AppDispatch = AppStore["dispatch"];
