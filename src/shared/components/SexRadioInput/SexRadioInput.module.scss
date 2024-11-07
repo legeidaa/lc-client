@@ -1,6 +1,5 @@
 .label {
     position: relative;
-    padding-left: 28px;
     cursor: pointer;
     line-height: 20px;
     display: inline-block;
@@ -34,8 +33,12 @@
 }
 
 .input {
-    position: absolute;
-    left: -9999px;
+    position: absolute; 
+    width: 100%;
+    opacity: 0;
+    height: 100%;
+    pointer-events: none;
+    left: 0;
 }
 
 .input:checked~.checkmark {

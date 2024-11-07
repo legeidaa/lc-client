@@ -27,6 +27,14 @@ export interface User {
     message: string;
 }
 
+export interface CreateUserRequest {
+    gameId: number;
+    name: string;
+    email: string;
+    sex: Sex;
+    role: Role;
+}
+
 export interface Game {
     gameId: number;
     gameHash: string;

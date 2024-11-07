@@ -1,35 +1,136 @@
 "use client";
 
-import { FormEvent, use, useEffect, useRef } from "react";
+import {
+    ChangeEvent,
+    FormEvent,
+    use,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
 import { Input } from "../Input/Input";
 import { SexRadioInput } from "../SexRadioInput/SexRadioInput";
 import styles from "./RegistrationForms.module.scss";
 import classNames from "classnames";
-import { useLazyGetGameQuery } from "@/lib/redux/gameApi";
-import { useTypedSelector } from "@/lib/redux/hooks/useTypedSelector";
-import { useActions } from "@/lib/redux/hooks/useActions";
+import {
+    useCreateUserMutation,
+    useGetGameQuery,
+    useLazyGetUsersQuery,
+} from "@/lib/redux/gameApi";
+import { useParams } from "next/navigation";
+import { CreateUserRequest, Sex, User } from "@/shared/interfaces/game";
+
+interface RegFormData {
+    "player-name": string;
+    "player-email": string;
+    "player-sex": string;
+    "partner-name": string;
+    "partner-email": string;
+    "partner-sex": string;
+}
 
 export default function RegistrationForms() {
-    const form = useRef<HTMLFormElement>(null);
-    const [trigger] = useLazyGetGameQuery();
+    const params = useParams<{ id: string }>();
+    const { gameId } = useGetGameQuery(params.id, {
+        selectFromResult: ({ data }) => ({
+            gameId: data?.gameId,
+        }),
+    });
 
-    const handleClick = async () => {
-        const data = await trigger("kVBP6UAukymJndgLmjRLGw", true);
-        console.log(data.data?.users);
+    const [getUsersQuery] = useLazyGetUsersQuery();
+    const [users, setUsers] = useState<User[]>([]);
+    const [readonly, setReadonly] = useState(false);
+
+    const [regFormData, setRegFormData] = useState<RegFormData>({
+        "player-name": "",
+        "player-email": "",
+        "player-sex": "",
+        "partner-name": "",
+        "partner-email": "",
+        "partner-sex": "",
+    });
+    const form = useRef<HTMLFormElement>(null);
+    const [createPlayerMutation, createPlayerMutationInfo] =
+        useCreateUserMutation();
+    const [createPartnerMutation, createPartnerMutationInfo] =
+        useCreateUserMutation();
+
+    // получение данных об игроках и подстановка в поля
+    useEffect(() => {
+        const fetchUsers = async () => {
+            const users = await getUsersQuery(String(gameId));
+
+            if (users.isSuccess && users.data.length === 2) {
+                setUsers(users.data);
+                setReadonly(true);
+
+                const player = users.data.find(
+                    (user) => user.role === "player"
+                );
+                const partner = users.data.find(
+                    (user) => user.role === "partner"
+                );
+
+                setRegFormData({
+                    "player-name": player?.name || "a",
+                    "player-email": player?.email || "",
+                    "player-sex": player?.sex || "",
+                    "partner-name": partner?.name || "",
+                    "partner-email": partner?.email || "",
+                    "partner-sex": partner?.sex || "",
+                });
+            }
+        };
+        fetchUsers();
+    }, []);
+
+    const handleSubmmit = async (e: FormEvent) => {
+        e.preventDefault();
+        if (!users) {
+            const createPlayerRequest: CreateUserRequest = {
+                gameId: Number(gameId),
+                name: regFormData["player-name"],
+                email: regFormData["player-email"],
+                sex: regFormData["player-sex"] as Sex,
+                role: "player",
+            };
+
+            const createPartnerRequest: CreateUserRequest = {
+                gameId: Number(gameId),
+                name: regFormData["partner-name"],
+                email: regFormData["partner-email"],
+                sex: regFormData["partner-sex"] as Sex,
+                role: "partner",
+            };
+
+            await createPlayerMutation(createPlayerRequest);
+
+            if (createPlayerMutationInfo.isSuccess) {
+                await createPartnerMutation(createPartnerRequest);
+                setReadonly(true);
+            }
+
+            // TODO сделать нормальную обработку ошибки
+            if (
+                createPlayerMutationInfo.isError &&
+                createPartnerMutationInfo.isError
+            ) {
+                console.error(
+                    createPlayerMutationInfo.error,
+                    createPartnerMutationInfo.error
+                );
+            }
+        } else {
+            console.log(users);
+        }
     };
 
-    const handleSubmmit = (e: FormEvent) => {
-        e.preventDefault();
-        const formData = new FormData(form.current!);
-        const formDataObj = {};
-        // formData.forEach((value, key) => (formDataObj[key] = value));
-        // console.log(formDataObj);
+    const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setRegFormData((prev) => ({ ...prev, [name]: value }));
     };
     return (
         <form ref={form} onSubmit={handleSubmmit}>
-            <button type="button" onClick={handleClick}>
-                click
-            </button>
             <div className={styles.wrapper}>
                 <div className={styles.playerForm}>
                     <h3 className={styles.playerFormTitle}>
@@ -42,6 +143,9 @@ export default function RegistrationForms() {
                             inputStyle="Small"
                             type="text"
                             label="Ваше имя:"
+                            value={regFormData["player-name"]}
+                            onChange={onInputChange}
+                            readOnly={readonly}
                             required
                         />
                         <Input
@@ -49,7 +153,10 @@ export default function RegistrationForms() {
                             id="player-email"
                             inputStyle="Small"
                             type="email"
+                            value={regFormData["player-email"]}
                             label="Ваша электронная почта:"
+                            readOnly={readonly}
+                            onChange={onInputChange}
                             required
                         />
                         <div className={styles.playerFormSex}>
@@ -58,12 +165,19 @@ export default function RegistrationForms() {
                                 name="player-sex"
                                 type="female"
                                 id="player-female"
+                                value={regFormData["player-sex"]}
+                                checked={regFormData["player-sex"] === "female"}
+                                onChange={onInputChange}
+                                disabled={readonly}
                                 required
                             />
                             <SexRadioInput
                                 name="player-sex"
                                 type="male"
                                 id="player-male"
+                                checked={regFormData["player-sex"] === "male"}
+                                onChange={onInputChange}
+                                disabled={readonly}
                                 required
                             />
                         </div>
@@ -72,7 +186,7 @@ export default function RegistrationForms() {
 
                 <div className={styles.playerForm}>
                     <h3 className={styles.playerFormTitle}>
-                        Введите имя, пол, и электронную почта вашего
+                        Введите имя, пол, и электронную почту вашего
                         <b> партнера</b>
                     </h3>
                     <div className={styles.playerFormBlock}>
@@ -81,14 +195,20 @@ export default function RegistrationForms() {
                             id="partner-name"
                             type="text"
                             inputStyle="Small"
+                            value={regFormData["partner-name"]}
                             label="Ваше имя:"
+                            readOnly={readonly}
+                            onChange={onInputChange}
                         />
                         <Input
                             name="partner-email"
                             id="partner-email"
                             type="email"
                             inputStyle="Small"
+                            value={regFormData["partner-email"]}
                             label="Ваша электронная почта:"
+                            readOnly={readonly}
+                            onChange={onInputChange}
                         />
                         <div className={styles.playerFormSex}>
                             <span className={styles.label}>Пол: </span>
@@ -96,12 +216,20 @@ export default function RegistrationForms() {
                                 name="partner-sex"
                                 type="female"
                                 id="partner-female"
+                                checked={
+                                    regFormData["partner-sex"] === "female"
+                                }
+                                onChange={onInputChange}
+                                disabled={readonly}
                                 required
                             />
                             <SexRadioInput
                                 name="partner-sex"
                                 type="male"
                                 id="partner-male"
+                                checked={regFormData["partner-sex"] === "male"}
+                                onChange={onInputChange}
+                                disabled={readonly}
                                 required
                             />
                         </div>
@@ -128,6 +256,7 @@ export default function RegistrationForms() {
                 </li>
             </ul>
             <div className={styles.submitBtnWrapper}>
+                {}
                 <button
                     className={classNames("btn", styles.submitBtn)}
                     type="submit"
