@@ -1,7 +1,5 @@
 import { CreateUserRequest, Game, User } from "@/shared/interfaces/game";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { create } from "domain";
-
 export const apiUrl = "http://localhost:3001/api/";
 
 export const gameApi = createApi({
@@ -24,6 +22,13 @@ export const gameApi = createApi({
         createUser: builder.mutation<User, CreateUserRequest>({
             query: (user) => ({
                 url: "user",
+                method: "POST",
+                body: user,
+            }),
+        }),
+        createPair: builder.mutation<User[], CreateUserRequest[]>({
+            query: (user) => ({
+                url: "user/pair",
                 method: "POST",
                 body: user,
             }),
@@ -52,4 +57,5 @@ export const {
     useGetUsersQuery,
     useLazyGetUsersQuery,
     useCreateUserMutation,
+    useCreatePairMutation
 } = gameApi;

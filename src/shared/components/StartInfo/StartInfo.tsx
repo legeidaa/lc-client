@@ -10,7 +10,7 @@ export const StartInfo = () => {
                 болезненно
             </h2>
             <div className={styles.arrow}>
-                <img src={ArrowImage} alt="" width={270}/>
+                <img src={ArrowImage.src} alt="" width={270}/>
             </div>
             <ul className={styles.list}>
                 <li className={styles.listItem}>

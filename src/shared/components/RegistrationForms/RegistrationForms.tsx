@@ -13,6 +13,7 @@ import { SexRadioInput } from "../SexRadioInput/SexRadioInput";
 import styles from "./RegistrationForms.module.scss";
 import classNames from "classnames";
 import {
+    useCreatePairMutation,
     useCreateUserMutation,
     useGetGameQuery,
     useLazyGetUsersQuery,
@@ -50,10 +51,7 @@ export default function RegistrationForms() {
         "partner-sex": "",
     });
     const form = useRef<HTMLFormElement>(null);
-    const [createPlayerMutation, createPlayerMutationInfo] =
-        useCreateUserMutation();
-    const [createPartnerMutation, createPartnerMutationInfo] =
-        useCreateUserMutation();
+    const [createPair, createPairInfo] = useCreatePairMutation();
 
     // получение данных об игроках и подстановка в поля
     useEffect(() => {
@@ -62,6 +60,8 @@ export default function RegistrationForms() {
 
             if (users.isSuccess && users.data.length === 2) {
                 setUsers(users.data);
+                console.log(users);
+
                 setReadonly(true);
 
                 const player = users.data.find(
@@ -86,7 +86,7 @@ export default function RegistrationForms() {
 
     const handleSubmmit = async (e: FormEvent) => {
         e.preventDefault();
-        if (!users) {
+        if (users.length < 2) {
             const createPlayerRequest: CreateUserRequest = {
                 gameId: Number(gameId),
                 name: regFormData["player-name"],
@@ -103,22 +103,13 @@ export default function RegistrationForms() {
                 role: "partner",
             };
 
-            await createPlayerMutation(createPlayerRequest);
-
-            if (createPlayerMutationInfo.isSuccess) {
-                await createPartnerMutation(createPartnerRequest);
-                setReadonly(true);
-            }
-
-            // TODO сделать нормальную обработку ошибки
-            if (
-                createPlayerMutationInfo.isError &&
-                createPartnerMutationInfo.isError
-            ) {
-                console.error(
-                    createPlayerMutationInfo.error,
-                    createPartnerMutationInfo.error
-                );
+            const response = await createPair([
+                createPlayerRequest,
+                createPartnerRequest,
+            ]);
+            setReadonly(true);
+            if (response.error) {
+                console.error(response.error);
             }
         } else {
             console.log(users);
