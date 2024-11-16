@@ -23,7 +23,7 @@ export const SexRadioInput: FC<SexRadioInputProps> = ({
                 className={styles.input}
                 {...props}
             />
-            <span className={styles.checkmark}></span>
+            <span className={styles.checkmark} />
         </label>
     );
 };

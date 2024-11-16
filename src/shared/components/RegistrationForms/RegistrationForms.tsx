@@ -3,7 +3,6 @@
 import {
     ChangeEvent,
     FormEvent,
-    use,
     useCallback,
     useEffect,
     useRef,
@@ -15,7 +14,6 @@ import styles from "./RegistrationForms.module.scss";
 import classNames from "classnames";
 import {
     useCreatePairMutation,
-    useCreateUserMutation,
     useGetGameQuery,
     useLazyGetUsersQuery,
 } from "@/lib/redux/gameApi";
@@ -54,7 +52,7 @@ export default function RegistrationForms() {
         "partner-sex": "",
     });
     const form = useRef<HTMLFormElement>(null);
-    const [createPair, createPairInfo] = useCreatePairMutation();
+    const [createPair] = useCreatePairMutation();
     console.log("update", regFormData);
 
     // получение данных об игроках и подстановка в поля
@@ -89,7 +87,7 @@ export default function RegistrationForms() {
             }
         };
         fetchUsers();
-    }, []);
+    }, [gameId, getUsersQuery]);
 
     const handleSubmmit = useCallback(async (e: FormEvent) => {
         e.preventDefault();
@@ -125,7 +123,7 @@ export default function RegistrationForms() {
             console.log(users);
             router.push(`/game/${gameHash}/player/pl-to-pr`);
         }
-    }, [users]);
+    }, [createPair, gameHash, gameId, regFormData, router, users]);
 
     const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -242,14 +240,14 @@ export default function RegistrationForms() {
 
             <ul className={styles.list}>
                 <li className={styles.listItem}>
-                    <div className={styles.circle}></div>
+                    <div className={styles.circle} />
                     <p className={styles.p}>
                         Игра идет в несколько этапов, в конце каждого уровня вам
                         будут даны инструкции к дальнейшему прохождению.
                     </p>
                 </li>
                 <li className={styles.listItem}>
-                    <div className={styles.circle}></div>
+                    <div className={styles.circle} />
                     <p className={styles.p}>
                         После прохождения вами первого уровня, к игре сможет
                         присоединиться ваш партнер, для этого ему будет

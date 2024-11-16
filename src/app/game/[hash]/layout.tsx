@@ -10,7 +10,7 @@ interface LayoutProps {
 
 export default function Layout({ children, params }: LayoutProps) {
     const gameQuery = useGetGameQuery(params.hash);
-    
+
     const router = useRouter();
     if (gameQuery.isLoading) {
         return <div>Loading [id] layout...</div>;
@@ -21,4 +21,5 @@ export default function Layout({ children, params }: LayoutProps) {
     if (gameQuery.isSuccess) {
         return <>{children}</>;
     }
+    return;
 }

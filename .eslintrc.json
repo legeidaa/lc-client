@@ -1,6 +1,57 @@
+// {
+//     "extends": [
+//         "next/core-web-vitals",
+//         "next/typescript",
+//     ]
+// }
 {
+    "env": {
+        "browser": true
+    },
+    "plugins": [
+        "react",
+        "react-hooks"
+    ],
     "extends": [
         "next/core-web-vitals",
         "next/typescript",
-    ]
+        "plugin:react/recommended",
+        "plugin:react-hooks/recommended"
+    ],
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        },
+        "import/resolver": {
+            "typescript": {
+                "project": "./packages/client/tsconfig.json"
+            }
+        }
+    },
+    "rules": {
+        "react/prop-types": "off",
+        "react/react-in-jsx-scope": "off",
+        "react/self-closing-comp": [
+            "error",
+            {
+                "component": true,
+                "html": true
+            }
+        ],
+        "react/jsx-filename-extension": [
+            "error",
+            {
+                "extensions": [
+                    ".tsx"
+                ]
+            }
+        ],
+        "react/jsx-boolean-value": [
+            "error",
+            "never"
+        ]
+    }
 }

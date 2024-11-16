@@ -1,3 +1,4 @@
+import Image from "next/image";
 import styles from "./StartInfo.module.scss";
 import ArrowImage from "@/img/arrow.svg";
 
@@ -10,11 +11,11 @@ export const StartInfo = () => {
                 болезненно
             </h2>
             <div className={styles.arrow}>
-                <img src={ArrowImage.src} alt="" width={270}/>
+                <Image src={ArrowImage.src} alt="" width={270} />
             </div>
             <ul className={styles.list}>
                 <li className={styles.listItem}>
-                    <div className={styles.circle}></div>
+                    <div className={styles.circle} />
                     <p className={styles.p}>
                         Если вам кажется, что вы вкладываетесь в отношения
                         больше, чем ваш партнер. Если вы ожидаете большего, чем
@@ -23,7 +24,7 @@ export const StartInfo = () => {
                     </p>
                 </li>
                 <li className={styles.listItem}>
-                    <div className={styles.circle}></div>
+                    <div className={styles.circle} />
                     <p className={styles.p}>
                         Чтобы отношения развивались гармонично, тепло и глубоко,
                         важно разговаривать. Уметь слушать и слышать друг друга.
@@ -34,7 +35,7 @@ export const StartInfo = () => {
                     </p>
                 </li>
                 <li className={styles.listItem}>
-                    <div className={styles.circle}></div>
+                    <div className={styles.circle} />
                     <p className={styles.p}>
                         Но чтобы было о чем говорить, нужно собрать материал для
                         беседы. И именно это поможет сделать игра Любовная

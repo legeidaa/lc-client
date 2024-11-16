@@ -1,7 +1,16 @@
-import { useTypedSelector } from "./hooks/useTypedSelector";
+import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 
-export const isComplete = useTypedSelector(
-    (state: RootState) => state.quiz.isComplete
+export const isCompleteSelector = createSelector(
+    [(state: RootState) => state],
+    (state) => {
+        return state.gameInfo.isComplete;
+    }
 );
-export const step = useTypedSelector((state: RootState) => state.quiz.step)
+
+export const stepSelector = createSelector(
+    [(state: RootState) => state],
+    (state) => {
+        return state.gameInfo.step;
+    }
+);
