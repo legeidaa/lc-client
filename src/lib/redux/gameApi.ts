@@ -1,4 +1,10 @@
-import { CreateUserRequest, Game, User } from "@/shared/interfaces/game";
+import {
+    CreateOrUpdateActionRequest,
+    CreateUserRequest,
+    Game,
+    User,
+} from "@/shared/interfaces/game";
+import { Action } from "@reduxjs/toolkit";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const apiUrl = "http://localhost:3001/api/";
 
@@ -43,10 +49,29 @@ export const gameApi = createApi({
         //     invalidatesTags: ['User'],
         // }),
 
-        getUsers: builder.query<User[], string>({
+        getUsers: builder.query<User[], number>({
             query: (hash) => `user/${hash}`,
             providesTags: ["User"],
         }),
+
+        createOrUpdateActions: builder.mutation<Action[], Action[]>({
+            query: (actions) => ({
+                url: "action",
+                method: "POST",
+                body: actions,
+            }),
+        }),
+
+        getActionsByUser: builder.query<Action[], number>({
+            query: (userId) => `action/action/by-user?userId=${userId}`,
+        }),
+
+        getActionsByType: builder.query<Action[], { type: string , userId: number}>({
+            query: ({ type, userId }) => {
+                return `action/action/by-type?userId=${userId}&type=${type}`
+            },
+        }),
+
     }),
 });
 
@@ -57,5 +82,5 @@ export const {
     useGetUsersQuery,
     useLazyGetUsersQuery,
     useCreateUserMutation,
-    useCreatePairMutation
+    useCreatePairMutation,
 } = gameApi;

@@ -1,20 +1,22 @@
 "use client";
 
 import { useGetGameQuery } from "@/lib/redux/gameApi";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-interface DashboardProps {
+interface LayoutProps {
     children: React.ReactNode;
-    params: { id: string };
+    params: { hash: string };
 }
 
-export default function Layout({ children, params }: DashboardProps) {
-    const gameQuery = useGetGameQuery(params.id);
+export default function Layout({ children, params }: LayoutProps) {
+    const gameQuery = useGetGameQuery(params.hash);
+    
+    const router = useRouter();
     if (gameQuery.isLoading) {
         return <div>Loading [id] layout...</div>;
     }
     if (gameQuery.isError) {
-        redirect("/not-found");
+        router.push("/not-found");
     }
     if (gameQuery.isSuccess) {
         return <>{children}</>;

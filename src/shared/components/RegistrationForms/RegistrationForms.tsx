@@ -4,6 +4,7 @@ import {
     ChangeEvent,
     FormEvent,
     use,
+    useCallback,
     useEffect,
     useRef,
     useState,
@@ -18,7 +19,7 @@ import {
     useGetGameQuery,
     useLazyGetUsersQuery,
 } from "@/lib/redux/gameApi";
-import { useParams } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { CreateUserRequest, Sex, User } from "@/shared/interfaces/game";
 
 interface RegFormData {
@@ -31,10 +32,12 @@ interface RegFormData {
 }
 
 export default function RegistrationForms() {
-    const params = useParams<{ id: string }>();
-    const { gameId } = useGetGameQuery(params.id, {
+    const params = useParams<{ hash: string }>();
+    const router = useRouter();
+    const { gameId, gameHash } = useGetGameQuery(params.hash, {
         selectFromResult: ({ data }) => ({
             gameId: data?.gameId,
+            gameHash: data?.gameHash,
         }),
     });
 
@@ -52,11 +55,15 @@ export default function RegistrationForms() {
     });
     const form = useRef<HTMLFormElement>(null);
     const [createPair, createPairInfo] = useCreatePairMutation();
+    console.log("update", regFormData);
 
     // получение данных об игроках и подстановка в поля
     useEffect(() => {
+        console.log("useeffect update");
+
         const fetchUsers = async () => {
-            const users = await getUsersQuery(String(gameId));
+            if (!gameId) return;
+            const users = await getUsersQuery(gameId);
 
             if (users.isSuccess && users.data.length === 2) {
                 setUsers(users.data);
@@ -84,7 +91,7 @@ export default function RegistrationForms() {
         fetchUsers();
     }, []);
 
-    const handleSubmmit = async (e: FormEvent) => {
+    const handleSubmmit = useCallback(async (e: FormEvent) => {
         e.preventDefault();
         if (users.length < 2) {
             const createPlayerRequest: CreateUserRequest = {
@@ -107,19 +114,24 @@ export default function RegistrationForms() {
                 createPlayerRequest,
                 createPartnerRequest,
             ]);
-            setReadonly(true);
+
             if (response.error) {
                 console.error(response.error);
+            } else {
+                setReadonly(true);
+                router.push(`/game/${gameHash}/player/pl-to-pr`);
             }
         } else {
             console.log(users);
+            router.push(`/game/${gameHash}/player/pl-to-pr`);
         }
-    };
+    }, [users]);
 
     const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setRegFormData((prev) => ({ ...prev, [name]: value }));
     };
+    
     return (
         <form ref={form} onSubmit={handleSubmmit}>
             <div className={styles.wrapper}>

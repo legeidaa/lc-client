@@ -15,6 +15,8 @@ export default function Payment() {
         return <div>Loading...</div>;
     }
     if (createGameResult.isSuccess) {
+
+        // TODO заменить на router.push
         redirect(`/game/${createGameResult.data.gameHash}/start`);
     }
     return (

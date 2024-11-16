@@ -16,6 +16,8 @@ export interface Action {
     userId: number;
 }
 
+export type CreateOrUpdateActionRequest = Action[];
+
 export interface User {
     userId: number;
     gameId: number;
