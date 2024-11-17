@@ -62,12 +62,12 @@ export const gameApi = createApi({
         }),
 
         getActionsByUser: builder.query<Action[], number>({
-            query: (userId) => `action/action/by-user?userId=${userId}`,
+            query: (userId) => `action/by-user?userId=${userId}`,
         }),
 
         getActionsByType: builder.query<Action[], { type: string , userId: number}>({
             query: ({ type, userId }) => {
-                return `action/action/by-type?userId=${userId}&type=${type}`
+                return `action/by-type?userId=${userId}&type=${type}`
             },
         }),
 
@@ -82,4 +82,7 @@ export const {
     useLazyGetUsersQuery,
     useCreateUserMutation,
     useCreatePairMutation,
+    useCreateOrUpdateActionsMutation,
+    useGetActionsByTypeQuery,
+    useGetActionsByUserQuery
 } = gameApi;

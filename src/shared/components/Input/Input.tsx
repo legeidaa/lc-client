@@ -2,8 +2,8 @@
 
 import { ChangeEvent, FC } from "react";
 import styles from "./Input.module.scss";
-import { CrossIcon } from "../icons/CrossIcon";
 import classnames from "classnames";
+import { CrossIcon } from "../Icons/CrossIcon";
 
 interface InputProps extends React.HTMLProps<HTMLInputElement> {
     label?: string;
@@ -11,7 +11,7 @@ interface InputProps extends React.HTMLProps<HTMLInputElement> {
     onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
     onDelete?: () => void;
     errorText?: string;
-    inputStyle: "Small" | "Cloud" | "Heart" | "HeartWhite" | "Cost";
+    inputStyle: "small" | "action" | "actionWhite" | "cost";
 }
 
 export const Input: FC<InputProps> = (props) => {

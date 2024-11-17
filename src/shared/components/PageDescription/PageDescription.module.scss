@@ -1,0 +1,22 @@
+.pageDescription {
+    font-weight: 600;
+    font-size: 36px;
+    line-height: 120%;
+    margin-bottom: 80px;
+
+    &_center {
+        text-align: center;
+    }
+
+    &_left {
+        text-align: left;
+    }
+
+    &_right {
+        text-align: right;
+    }
+
+    b {
+        font-weight: 700;
+    }
+}

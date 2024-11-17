@@ -53,19 +53,15 @@ export default function RegistrationForms() {
     });
     const form = useRef<HTMLFormElement>(null);
     const [createPair] = useCreatePairMutation();
-    console.log("update", regFormData);
 
     // получение данных об игроках и подстановка в поля
     useEffect(() => {
-        console.log("useeffect update");
-
         const fetchUsers = async () => {
             if (!gameId) return;
             const users = await getUsersQuery(gameId);
 
             if (users.isSuccess && users.data.length === 2) {
                 setUsers(users.data);
-                console.log(users);
 
                 setReadonly(true);
 
@@ -120,7 +116,6 @@ export default function RegistrationForms() {
                 router.push(`/game/${gameHash}/player/pl-to-pr`);
             }
         } else {
-            console.log(users);
             router.push(`/game/${gameHash}/player/pl-to-pr`);
         }
     }, [createPair, gameHash, gameId, regFormData, router, users]);
@@ -141,7 +136,7 @@ export default function RegistrationForms() {
                         <Input
                             name="player-name"
                             id="player-name"
-                            inputStyle="Small"
+                            inputStyle="small"
                             type="text"
                             label="Ваше имя:"
                             value={regFormData["player-name"]}
@@ -152,7 +147,7 @@ export default function RegistrationForms() {
                         <Input
                             name="player-email"
                             id="player-email"
-                            inputStyle="Small"
+                            inputStyle="small"
                             type="email"
                             value={regFormData["player-email"]}
                             label="Ваша электронная почта:"
@@ -195,7 +190,7 @@ export default function RegistrationForms() {
                             name="partner-name"
                             id="partner-name"
                             type="text"
-                            inputStyle="Small"
+                            inputStyle="small"
                             value={regFormData["partner-name"]}
                             label="Ваше имя:"
                             readOnly={readonly}
@@ -205,7 +200,7 @@ export default function RegistrationForms() {
                             name="partner-email"
                             id="partner-email"
                             type="email"
-                            inputStyle="Small"
+                            inputStyle="small"
                             value={regFormData["partner-email"]}
                             label="Ваша электронная почта:"
                             readOnly={readonly}

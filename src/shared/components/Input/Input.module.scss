@@ -7,8 +7,6 @@
     font-size: 25px;
     margin-bottom: 10px;
     display: inline-block;
-
-    &Wrapper {}
 }
 
 .error {
@@ -48,9 +46,7 @@
         color: var(--link-active-color);
     }
 
-
-    
-    &Small {
+    &_small {
         border: 1px solid rgba(217, 128, 151, 0.42);
         border-radius: 100px;
         padding: 0 16px;
@@ -59,13 +55,17 @@
         color: var(--pink);
     }
 
-    &_choice {
-        height: 65px;
-        padding: 15px 45px;
-        font-weight: 500;
-        font-size: 28px;
-        border-radius: 0 100px 100px 100px;
-    }
+    &_action {}
+
+    &_actionWhite {}
+
+    // &_choice {
+    //     height: 65px;
+    //     padding: 15px 45px;
+    //     font-weight: 500;
+    //     font-size: 28px;
+    //     border-radius: 0 100px 100px 100px;
+    // }
 
     &_weight {
         text-align: center;
