@@ -3,7 +3,7 @@
 import { ChangeEvent, FC } from "react";
 import styles from "./Input.module.scss";
 import classnames from "classnames";
-import { CrossIcon } from "../Icons/CrossIcon";
+import { CrossIcon } from "../icons/CrossIcon";
 
 interface InputProps extends React.HTMLProps<HTMLInputElement> {
     label?: string;
@@ -42,7 +42,7 @@ export const Input: FC<InputProps> = (props) => {
                 <input
                     className={classnames(
                         styles.inputElement,
-                        styles["inputElement" + inputStyle],
+                        styles["inputElement_" + inputStyle],
                         { inputElementDelete: onDelete }
                     )}
                     onChange={onChangeHandler}

@@ -7,6 +7,7 @@ import {
     useEffect,
     useRef,
     useState,
+    useTransition,
 } from "react";
 import { Input } from "../Input/Input";
 import { SexRadioInput } from "../SexRadioInput/SexRadioInput";
@@ -42,6 +43,7 @@ export default function RegistrationForms() {
     const [getUsersQuery] = useLazyGetUsersQuery();
     const [users, setUsers] = useState<User[]>([]);
     const [readonly, setReadonly] = useState(false);
+    const [isSubmitPending, startSubmitTransition] = useTransition();
 
     const [regFormData, setRegFormData] = useState<RegFormData>({
         "player-name": "",
@@ -87,37 +89,39 @@ export default function RegistrationForms() {
 
     const handleSubmmit = useCallback(async (e: FormEvent) => {
         e.preventDefault();
-        if (users.length < 2) {
-            const createPlayerRequest: CreateUserRequest = {
-                gameId: Number(gameId),
-                name: regFormData["player-name"],
-                email: regFormData["player-email"],
-                sex: regFormData["player-sex"] as Sex,
-                role: "player",
-            };
-
-            const createPartnerRequest: CreateUserRequest = {
-                gameId: Number(gameId),
-                name: regFormData["partner-name"],
-                email: regFormData["partner-email"],
-                sex: regFormData["partner-sex"] as Sex,
-                role: "partner",
-            };
-
-            const response = await createPair([
-                createPlayerRequest,
-                createPartnerRequest,
-            ]);
-
-            if (response.error) {
-                console.error(response.error);
+        startSubmitTransition(async () => {
+            if (users.length < 2) {
+                const createPlayerRequest: CreateUserRequest = {
+                    gameId: Number(gameId),
+                    name: regFormData["player-name"],
+                    email: regFormData["player-email"],
+                    sex: regFormData["player-sex"] as Sex,
+                    role: "player",
+                };
+    
+                const createPartnerRequest: CreateUserRequest = {
+                    gameId: Number(gameId),
+                    name: regFormData["partner-name"],
+                    email: regFormData["partner-email"],
+                    sex: regFormData["partner-sex"] as Sex,
+                    role: "partner",
+                };
+    
+                const response = await createPair([
+                    createPlayerRequest,
+                    createPartnerRequest,
+                ]);
+    
+                if (response.error) {
+                    console.error(response.error);
+                } else {
+                    setReadonly(true);
+                    router.push(`/game/${gameHash}/player/pl-to-pr`);
+                }
             } else {
-                setReadonly(true);
                 router.push(`/game/${gameHash}/player/pl-to-pr`);
             }
-        } else {
-            router.push(`/game/${gameHash}/player/pl-to-pr`);
-        }
+        })
     }, [createPair, gameHash, gameId, regFormData, router, users]);
 
     const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -161,7 +165,6 @@ export default function RegistrationForms() {
                                 name="player-sex"
                                 type="female"
                                 id="player-female"
-                                value={regFormData["player-sex"]}
                                 checked={regFormData["player-sex"] === "female"}
                                 onChange={onInputChange}
                                 disabled={readonly}
@@ -252,10 +255,10 @@ export default function RegistrationForms() {
                 </li>
             </ul>
             <div className={styles.submitBtnWrapper}>
-                {}
                 <button
                     className={classNames("btn", styles.submitBtn)}
                     type="submit"
+                    disabled={isSubmitPending}
                 >
                     ВСЕ ПОНЯТНО
                 </button>

@@ -2,34 +2,62 @@
 import { ActionsList } from "@/shared/components/ActionsList/ActionsList";
 import { PageDescription } from "@/shared/components/PageDescription/PageDescription";
 import styles from "./page.module.scss";
-import { useGetActionsByTypeQuery, useGetGameQuery } from "@/lib/redux/gameApi";
+import { useGetGameQuery } from "@/lib/redux/gameApi";
 import { useParams, useRouter } from "next/navigation";
-import { Action } from "@/shared/interfaces/game";
+import { Action, User } from "@/shared/interfaces/game";
 // import { useParams } from "next/navigation";
 
+interface InitialAction extends Action {
+    blank: boolean;
+}
+
 export default function Home() {
-    // if currentRole === 'player' грузим зеленые данные
-    // if currentRole === 'partner' грузим синие данные
     const params = useParams<{ hash: string; user: string }>();
-    const router = useRouter();
-    const gameData = useGetGameQuery(params.hash);
+    // const router = useRouter();
 
-    // if (gameData.isLoading) {
-    //     return <div>Loading [id] layout...</div>;
-    // }
+    const game = useGetGameQuery(params.hash);
+    console.log(game);
 
-    if (gameData.isError) {
-        // TODO заменить на компонент
-        router.push("/not-found");
+    if (game.isError) {
+        // TODO заменить на компонент c ошибкой
+        // router.push("/not-found");
     }
-    const actionsType = params.user === "player" ? "green" : "blue";
-    // console.log(params);
 
-    const actions = useGetActionsByTypeQuery({
-        type: actionsType,
-        userId: 3,
-    });
-    console.log(actions.data);
+
+    // TODO перенести логику внутрь ActionsList
+
+    // const actionsType = params.user === "player" ? "green" : "blue";
+
+    const actionsList = () => {
+        if (game.isSuccess) {
+            const currentUser = game.data?.users.find(
+                (u) => u.role === params.user
+            ) as User;
+
+            const initialActions: InitialAction[] = new Array(4).fill({
+                userId: currentUser.userId,
+                cost: 0,
+                title: "",
+                // помечаем, что это initial action
+                blank: true
+            });
+
+            const actions =
+                currentUser.actions.length > 0
+                    ? currentUser.actions
+                    : initialActions;
+
+            return (
+                <ActionsList
+                    actions={actions}
+                    onInputChange={() => {}}
+                    onRowDelete={() => {}}
+                    onAddClick={() => {}}
+                />
+            );
+        }
+        return;
+    };
 
     return (
         <div className="container">
@@ -73,17 +101,7 @@ export default function Home() {
                 </div>
             </div>
 
-            {
-                actions.data && (
-                    <ActionsList
-                        actions={actions.data as Action[]}
-                        onInputChange={() => {}}
-                        onRowDelete={() => {}}
-                        onAddClick={() => {}}
-                    />
-                )
-            }
-
+            {actionsList()}
         </div>
     );
 }

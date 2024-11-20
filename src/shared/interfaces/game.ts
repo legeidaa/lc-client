@@ -27,6 +27,8 @@ export interface User {
     role: Role;
     hasResources: boolean;
     message: string;
+    actions: Action[];
+    expectations: Expectation[];
 }
 
 export interface CreateUserRequest {

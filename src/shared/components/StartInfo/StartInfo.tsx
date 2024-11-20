@@ -11,7 +11,7 @@ export const StartInfo = () => {
                 болезненно
             </h2>
             <div className={styles.arrow}>
-                <Image src={ArrowImage.src} alt="" width={270} />
+                <Image src={ArrowImage.src} alt="" height={0} width={270}  style={{ height: 'auto' }} />
             </div>
             <ul className={styles.list}>
                 <li className={styles.listItem}>

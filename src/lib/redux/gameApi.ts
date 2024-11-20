@@ -84,5 +84,7 @@ export const {
     useCreatePairMutation,
     useCreateOrUpdateActionsMutation,
     useGetActionsByTypeQuery,
-    useGetActionsByUserQuery
+    useLazyGetActionsByTypeQuery,
+    useGetActionsByUserQuery,
+    useLazyGetActionsByUserQuery
 } = gameApi;

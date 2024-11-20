@@ -1,6 +1,6 @@
-import { FC } from "react";
+import { FC, SVGProps } from "react";
 
-export const CrossIcon: FC<React.SVGProps<SVGSVGElement>> = (props) => {
+export const CrossIcon: FC<SVGProps<SVGSVGElement>> = (props) => {
     return (
         <svg
             width="96"

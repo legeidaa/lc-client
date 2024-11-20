@@ -2,7 +2,7 @@ import { FC } from "react";
 import styles from "./ActionsList.module.scss";
 import { Input } from "../Input/Input";
 import { Action } from "@/shared/interfaces/game";
-import { CrossIcon } from "../Icons/CrossIcon";
+import { CrossIcon } from "../icons/CrossIcon";
 
 interface ActionsListProps {
     actions: Action[];
