@@ -1,64 +1,69 @@
 "use client";
+
 import { ActionsList } from "@/shared/components/ActionsList/ActionsList";
 import { PageDescription } from "@/shared/components/PageDescription/PageDescription";
 import styles from "./page.module.scss";
-import { useGetGameQuery } from "@/lib/redux/gameApi";
-import { useParams, useRouter } from "next/navigation";
-import { Action, User } from "@/shared/interfaces/game";
-// import { useParams } from "next/navigation";
-
-interface InitialAction extends Action {
-    blank: boolean;
-}
+import { useGetActionsByTypeQuery, useGetGameQuery } from "@/lib/redux/gameApi";
+import { useParams } from "next/navigation";
+import { InitialAction, User } from "@/shared/interfaces/game";
 
 export default function Home() {
     const params = useParams<{ hash: string; user: string }>();
-    // const router = useRouter();
 
-    const game = useGetGameQuery(params.hash);
-    console.log(game);
+    const { data: game, isSuccess } = useGetGameQuery(params.hash);
 
-    if (game.isError) {
-        // TODO заменить на компонент c ошибкой
-        // router.push("/not-found");
-    }
+    const currentUser = game?.users.find((u) => u.role === params.user) as User;
+    const actionsType = params.user === "player" ? "green" : "blue";
 
+    const { data: actions, isSuccess: isActionsSuccess } =
+        useGetActionsByTypeQuery(
+            {
+                type: actionsType,
+                userId: currentUser?.userId,
+            },
+            { skip: !isSuccess && !currentUser }
+        );
 
-    // TODO перенести логику внутрь ActionsList
-
-    // const actionsType = params.user === "player" ? "green" : "blue";
+    // const [errorText, setErrorText] = useState("")
 
     const actionsList = () => {
-        if (game.isSuccess) {
-            const currentUser = game.data?.users.find(
-                (u) => u.role === params.user
-            ) as User;
+        if (isActionsSuccess) {
+            function createActions(num: number) {
+                const initialActions: InitialAction[] = new Array(num)
+                    .fill(null)
+                    .map(() => {
+                        return {
+                            userId: currentUser.userId,
+                            cost: null,
+                            title: "",
+                            type: actionsType,
+                            // помечаем, что это initial action
+                            initial: true,
+                            actionId: Date.now() + Math.random(),
+                        };
+                    });
+                return initialActions;
+            }
 
-            const initialActions: InitialAction[] = new Array(4).fill({
-                userId: currentUser.userId,
-                cost: 0,
-                title: "",
-                // помечаем, что это initial action
-                blank: true
-            });
-
-            const actions =
-                currentUser.actions.length > 0
-                    ? currentUser.actions
-                    : initialActions;
+            const newActions =
+                actions.length > 4
+                    ? (actions as InitialAction[])
+                    : ([
+                          ...actions,
+                          ...createActions(4 - actions.length),
+                      ] as InitialAction[]);
 
             return (
                 <ActionsList
-                    actions={actions}
-                    onInputChange={() => {}}
-                    onRowDelete={() => {}}
-                    onAddClick={() => {}}
+                    actions={newActions}
+                    actionsType={actionsType}
+                    user={currentUser}
+                    placeholder="Что вы делаете"
                 />
             );
         }
-        return;
+        return <div>Загрузка</div>;
     };
-
     return (
         <div className="container">
             <PageDescription textAlign="center">

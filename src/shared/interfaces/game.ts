@@ -10,10 +10,14 @@ export interface Expectation {
 
 export interface Action {
     actionId: number;
-    cost: number;
+    cost: number | null;
     title: string;
     type: ActionType;
     userId: number;
+}
+
+export interface InitialAction extends Action {
+    initial?: boolean;
 }
 
 export type CreateOrUpdateActionRequest = Action[];
