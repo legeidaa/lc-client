@@ -12,6 +12,7 @@ interface InputProps extends React.HTMLProps<HTMLInputElement> {
     onDelete?: () => void;
     errorText?: string;
     inputStyle: "small" | "action" | "actionWhite" | "cost";
+    isDeleteBtnDisabled?: boolean;
 }
 
 export const Input: FC<InputProps> = (props) => {
@@ -22,6 +23,7 @@ export const Input: FC<InputProps> = (props) => {
         onDelete,
         errorText,
         inputStyle,
+        isDeleteBtnDisabled,
         ...otherProps
     } = props;
 
@@ -54,6 +56,7 @@ export const Input: FC<InputProps> = (props) => {
             )}
             {onDelete && (
                 <button
+                    disabled={isDeleteBtnDisabled}
                     className={classnames(
                         "btn btn_round btn_icon",
                         styles.deleteBtn

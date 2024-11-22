@@ -5,7 +5,8 @@ import { PageDescription } from "@/shared/components/PageDescription/PageDescrip
 import styles from "./page.module.scss";
 import { useGetActionsByTypeQuery, useGetGameQuery } from "@/lib/redux/gameApi";
 import { useParams } from "next/navigation";
-import { InitialAction, User } from "@/shared/interfaces/game";
+import { User } from "@/shared/interfaces/game";
+import { useCallback } from "react";
 
 export default function Home() {
     const params = useParams<{ hash: string; user: string }>();
@@ -24,38 +25,15 @@ export default function Home() {
             { skip: !isSuccess && !currentUser }
         );
 
+    console.log("update", actions);
+
     // const [errorText, setErrorText] = useState("")
 
-    const actionsList = () => {
+    const actionsList = useCallback(() => {
         if (isActionsSuccess) {
-            function createActions(num: number) {
-                const initialActions: InitialAction[] = new Array(num)
-                    .fill(null)
-                    .map(() => {
-                        return {
-                            userId: currentUser.userId,
-                            cost: null,
-                            title: "",
-                            type: actionsType,
-                            // помечаем, что это initial action
-                            initial: true,
-                            actionId: Date.now() + Math.random(),
-                        };
-                    });
-                return initialActions;
-            }
-
-            const newActions =
-                actions.length > 4
-                    ? (actions as InitialAction[])
-                    : ([
-                          ...actions,
-                          ...createActions(4 - actions.length),
-                      ] as InitialAction[]);
-
             return (
                 <ActionsList
-                    actions={newActions}
+                    actions={actions}
                     actionsType={actionsType}
                     user={currentUser}
                     placeholder="Что вы делаете"
@@ -63,7 +41,7 @@ export default function Home() {
             );
         }
         return <div>Загрузка</div>;
-    };
+    }, [actions, actionsType, currentUser, isActionsSuccess]);
     return (
         <div className="container">
             <PageDescription textAlign="center">

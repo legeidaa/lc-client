@@ -16,8 +16,8 @@ export interface Action {
     userId: number;
 }
 
-export interface InitialAction extends Action {
-    initial?: boolean;
+export interface ClientAction extends Action {
+    client?: boolean;
 }
 
 export type CreateOrUpdateActionRequest = Action[];

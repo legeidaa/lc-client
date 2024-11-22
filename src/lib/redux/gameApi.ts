@@ -1,18 +1,13 @@
-import {
-    CreateUserRequest,
-    Game,
-    User,
-} from "@/shared/interfaces/game";
-import { Action } from "@reduxjs/toolkit";
+import { Action, CreateUserRequest, Game, ClientAction, User } from "@/shared/interfaces/game";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const apiUrl = "http://localhost:3001/api/";
 
 export const gameApi = createApi({
     reducerPath: "gameApi",
-    keepUnusedDataFor: 30,
     baseQuery: fetchBaseQuery({ baseUrl: apiUrl }),
-    tagTypes: ["User"],
+    tagTypes: ["User", "Action"],
     endpoints: (builder) => ({
+        // game
         createGame: builder.mutation<Game, void>({
             query: () => ({
                 url: "game",
@@ -24,13 +19,7 @@ export const gameApi = createApi({
             query: (hash) => `game/${hash}`,
         }),
 
-        createUser: builder.mutation<User, CreateUserRequest>({
-            query: (user) => ({
-                url: "user",
-                method: "POST",
-                body: user,
-            }),
-        }),
+        // user
         createPair: builder.mutation<User[], CreateUserRequest[]>({
             query: (user) => ({
                 url: "user/pair",
@@ -53,24 +42,43 @@ export const gameApi = createApi({
             providesTags: ["User"],
         }),
 
-        createOrUpdateActions: builder.mutation<Action[], Action[]>({
+        // action
+        createOrUpdateActions: builder.mutation<Action[], ClientAction[]>({
             query: (actions) => ({
                 url: "action",
                 method: "POST",
                 body: actions,
             }),
+            invalidatesTags: ["Action"],
         }),
 
         getActionsByUser: builder.query<Action[], number>({
-            query: (userId) => `action/by-user?userId=${userId}`,
+            query: (userId) => ({
+                url: `action/by-user?userId=${userId}`,
+            }),
+            providesTags: ["Action"],
         }),
 
-        getActionsByType: builder.query<Action[], { type: string , userId: number}>({
+        getActionsByType: builder.query<
+            Action[],
+            { type: string; userId: number }
+        >({
             query: ({ type, userId }) => {
-                return `action/by-type?userId=${userId}&type=${type}`
+                return `action/by-type?userId=${userId}&type=${type}`;
             },
+            providesTags: ["Action"],
         }),
 
+        deleteAction: builder.mutation<
+            { success: boolean; id: number },
+            number
+        >({
+            query: (actionId) => ({
+                url: `action/${actionId}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["Action"],
+        }),
     }),
 });
 
@@ -80,11 +88,11 @@ export const {
     useLazyGetGameQuery,
     useGetUsersQuery,
     useLazyGetUsersQuery,
-    useCreateUserMutation,
     useCreatePairMutation,
     useCreateOrUpdateActionsMutation,
     useGetActionsByTypeQuery,
     useLazyGetActionsByTypeQuery,
     useGetActionsByUserQuery,
-    useLazyGetActionsByUserQuery
+    useLazyGetActionsByUserQuery,
+    useDeleteActionMutation,
 } = gameApi;
