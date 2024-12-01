@@ -3,45 +3,9 @@
 import { ActionsList } from "@/shared/components/ActionsList/ActionsList";
 import { PageDescription } from "@/shared/components/PageDescription/PageDescription";
 import styles from "./page.module.scss";
-// import { useGetActionsByTypeQuery, useGetGameQuery } from "@/lib/redux/gameApi";
-// import { useParams } from "next/navigation";
-// import { User } from "@/shared/interfaces/game";
-// import { useCallback } from "react";
+
 
 export default function Home() {
-    // const params = useParams<{ hash: string; user: string }>();
-
-    // const { data: game, isSuccess } = useGetGameQuery(params.hash);
-
-    // const currentUser = game?.users.find((u) => u.role === params.user) as User;
-    // const actionsType = params.user === "player" ? "green" : "blue";
-
-    // const { data: actions, isSuccess: isActionsSuccess } =
-    //     useGetActionsByTypeQuery(
-    //         {
-    //             type: actionsType,
-    //             userId: currentUser?.userId,
-    //         },
-    //         { skip: !isSuccess && !currentUser }
-    //     );
-
-    // console.log("update", actions);
-
-    // const [errorText, setErrorText] = useState("")
-
-    // const actionsList = useCallback(() => {
-    //     if (isActionsSuccess) {
-    //         return (
-    //             <ActionsList
-    //                 actions={actions}
-    //                 actionsType={actionsType}
-    //                 user={currentUser}
-    //                 placeholder="Что вы делаете"
-    //             />
-    //         );
-    //     }
-    //     return <div>Загрузка</div>;
-    // }, [actions, actionsType, currentUser, isActionsSuccess]);
     return (
         <div className="container">
             <PageDescription textAlign="center">
@@ -83,8 +47,6 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-
-            {/* {actionsList()} */}
             <ActionsList />
         </div>
     );
