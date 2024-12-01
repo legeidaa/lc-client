@@ -1,68 +1,59 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import styles from "./ActionsList.module.scss";
 import { Input } from "../Input/Input";
 import {
     Action,
-    ActionType,
     ClientAction,
-    User,
+    CreateActionsRequest,
 } from "@/shared/interfaces/game";
 import { CrossIcon } from "../icons/CrossIcon";
 import {
-    useCreateOrUpdateActionsMutation,
+    useCreateActionsMutation,
     useDeleteActionMutation,
+    useUpdateActionsMutation,
 } from "@/lib/redux/gameApi";
+import { createClientAction } from "@/shared/utils/createClientAction";
+import { isClientAction } from "@/shared/utils/isClientAction";
+import { useGetActionsListData } from "@/shared/hooks/useGetActionsListData";
 
-interface ActionsListProps {
-    actions: Action[];
-    placeholder?: string;
-    actionsType: ActionType;
-    user: User;
-}
+export const ActionsList: FC = () => {
+    const { actions, actionsType, user, isActionsLoadingSuccess } =
+        useGetActionsListData();
 
-export const ActionsList: FC<ActionsListProps> = ({
-    actions,
-    placeholder,
-    actionsType,
-    user,
-}) => {
-    const [updateActions, { isLoading: isActionsLoading }] =
-        useCreateOrUpdateActionsMutation();
+    const [updateActions, { isLoading: isUpdateActionsLoading }] =
+        useUpdateActionsMutation();
+    const [createActions, { isLoading: isCreateActionsLoading }] =
+        useCreateActionsMutation();
     const [deleteAction] = useDeleteActionMutation();
+
     const [btnToDelete, setBtnToDelete] = useState<number | null>(null);
-
-    const createClientAction = (): ClientAction => {
-        return {
-            userId: user.userId,
-            cost: null,
-            title: "",
-            type: actionsType,
-            actionId: Date.now() + Math.random(),
-            // помечаем, что это созданный на клиенте action
-            client: true,
-        };
-    };
-
-    const createInitialActions = (): ClientAction[] => {
-        function createClientActions(num: number): ClientAction[] {
-            const clientActions: ClientAction[] = new Array(num)
-                .fill(null)
-                .map(() => {
-                    return createClientAction();
-                });
-            return clientActions;
-        }
-
-        const newActions =
-            actions.length > 4
-                ? actions
-                : [...actions, ...createClientActions(4 - actions.length)];
-
-        return newActions;
-    };
-
-    const [clientActions, setClientActions] = useState(createInitialActions());
+    const [clientActions, setClientActions] = useState<Array<Action>>([]);
     const [isSomeFieldsEmpty, setIsSomeFieldsEmpty] = useState(false);
+    const [isFirstRender, setIsFirstRender] = useState(true);
+    useEffect(() => {
+        // если в базе менее четырех действий, подмешиваем дополнительные с пометкой, что созданы на клиенте
+        if (isActionsLoadingSuccess && actions && isFirstRender) {
+            function createClientActions(num: number): ClientAction[] {
+                const clientActions: ClientAction[] = new Array(num)
+                    .fill(null)
+                    .map(() => {
+                        return createClientAction(user, actionsType);
+                    });
+                return clientActions;
+            }
+
+            const newActions =
+                actions.length > 4
+                    ? actions
+                    : [...actions, ...createClientActions(4 - actions.length)];
+
+            setIsFirstRender(false);
+            setClientActions(newActions);
+        // }
+        } else if (isActionsLoadingSuccess && actions) {
+            setClientActions([...actions]);
+        }
+    }, [actions, actionsType, isActionsLoadingSuccess, user]);
 
     const onInputChange = (value: string, i: number) => {
         const newActions = [...clientActions];
@@ -72,19 +63,27 @@ export const ActionsList: FC<ActionsListProps> = ({
             newActions[i] = newAction;
             setClientActions(newActions);
         }
+        const isSomeFieldsEmpty = newActions.some((action) => !action.title);
+        if (!isSomeFieldsEmpty) {
+            setIsSomeFieldsEmpty(false);
+        }
     };
 
     const onAddClick = () => {
-        setClientActions([...clientActions, createClientAction()]);
+        setClientActions([
+            ...clientActions,
+            createClientAction(user, actionsType),
+        ]);
     };
 
     const onRowDelete = async (actionId: number) => {
         const toDelete = clientActions.find(
             (action) => action.actionId === actionId
         );
-        const isClient = toDelete?.client;
 
-        if (isClient) {
+        if (!toDelete) throw new Error("Action not found");
+
+        if (isClientAction(toDelete)) {
             setClientActions(
                 clientActions.filter((action) => action.actionId !== actionId)
             );
@@ -108,22 +107,38 @@ export const ActionsList: FC<ActionsListProps> = ({
             setIsSomeFieldsEmpty(true);
             return;
         }
+        const actionsToUpdate: Action[] = [];
+        const actionsToCreate: CreateActionsRequest = [];
 
-        const actionsToUpdate = clientActions.map((action) => {
-            if (action.client) {
-                return {
-                    cost: action.cost,
+        clientActions.forEach((action) => {
+            if (isClientAction(action)) {
+                actionsToCreate.push({
                     title: action.title,
                     type: action.type,
                     userId: user.userId,
-                } as Action;
+                });
+            } else {
+                actionsToUpdate.push(action);
             }
-            return action;
         });
-        const updatedActions = await updateActions(actionsToUpdate).unwrap();
-        setClientActions(updatedActions);
-        setIsSomeFieldsEmpty(false);
+        console.log(actionsToUpdate, actionsToCreate);
+
+        const actionsQuery = [];
+        if (actionsToCreate.length > 0) {
+            actionsQuery.push(createActions(actionsToCreate));
+        }
+        if (actionsToUpdate.length > 0) {
+            actionsQuery.push(updateActions(actionsToUpdate));
+        }
+
+        Promise.all(actionsQuery);
     };
+
+    console.log("RERENDER", clientActions, actions);
+
+    if (!isActionsLoadingSuccess) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <>
@@ -133,7 +148,7 @@ export const ActionsList: FC<ActionsListProps> = ({
                         <Input
                             inputStyle="action"
                             value={title}
-                            placeholder={placeholder}
+                            placeholder={"Что вы делаете"}
                             onChange={(e) => onInputChange(e.target.value, i)}
                             isDeleteBtnDisabled={btnToDelete === actionId}
                             onDelete={
@@ -149,14 +164,17 @@ export const ActionsList: FC<ActionsListProps> = ({
                 ))}
             </ul>
 
-            <div onClick={onAddClick} className="choices-list__add">
+            <div onClick={onAddClick} className={styles.addRow}>
                 <button className="btn btn_round btn_icon">
                     <CrossIcon />
                 </button>
                 <span>Добавить ещё строку</span>
             </div>
 
-            <button onClick={saveData} disabled={isActionsLoading}>
+            <button
+                onClick={saveData}
+                disabled={isCreateActionsLoading || isUpdateActionsLoading}
+            >
                 Готово
             </button>
         </>

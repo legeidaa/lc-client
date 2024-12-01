@@ -17,10 +17,12 @@ export interface Action {
 }
 
 export interface ClientAction extends Action {
-    client?: boolean;
+    client: boolean;
 }
 
-export type CreateOrUpdateActionRequest = Action[];
+export type CreateActionsRequest = Array<
+    Pick<Action, "userId" | "type" | "title">
+>;
 
 export interface User {
     userId: number;
@@ -46,6 +48,6 @@ export interface CreateUserRequest {
 export interface Game {
     gameId: number;
     gameHash: string;
-    currentUserRole: string;
+    currentUserRole: Role;
     users: User[];
 }

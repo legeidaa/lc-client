@@ -1,4 +1,10 @@
-import { Action, CreateUserRequest, Game, ClientAction, User } from "@/shared/interfaces/game";
+import {
+    Action,
+    CreateActionsRequest,
+    CreateUserRequest,
+    Game,
+    User,
+} from "@/shared/interfaces/game";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const apiUrl = "http://localhost:3001/api/";
 
@@ -43,13 +49,51 @@ export const gameApi = createApi({
         }),
 
         // action
-        createOrUpdateActions: builder.mutation<Action[], ClientAction[]>({
+        // если передается без actionId, то создается новый, в ином случае обновляется
+        // createOrUpdateActions: builder.mutation<Action[], Array<Action | Omit<Action, "actionId">> >({
+        //     query: (actions) => ({
+        //         url: "action",
+        //         method: "POST",
+        //         body: actions,
+        //     }),
+        //     invalidatesTags: ["Action"],
+        // }),
+        createActions: builder.mutation<Action, CreateActionsRequest>({
             query: (actions) => ({
                 url: "action",
                 method: "POST",
                 body: actions,
             }),
             invalidatesTags: ["Action"],
+            // invalidatesTags: (result, error, arg) =>
+            //     result
+            //         ? [
+            //               {
+            //                   type: "Action" as const,
+            //                   id: result.actionId,
+            //               },
+            //               "Action",
+            //           ]
+            //         : ["Action"],
+        }),
+
+        updateActions: builder.mutation<Action[], Action[]>({
+            query: (actions) => ({
+                url: "action",
+                method: "PATCH",
+                body: actions,
+            }),
+            invalidatesTags: ["Action"],
+            // invalidatesTags: (result, error, arg) =>
+            //     result
+            //         ? [
+            //               ...result.map(({ actionId }) => ({
+            //                   type: "Action" as const,
+            //                   id: actionId,
+            //               })),
+            //               "Action",
+            //           ]
+            //         : ["Action"],
         }),
 
         getActionsByUser: builder.query<Action[], number>({
@@ -77,7 +121,9 @@ export const gameApi = createApi({
                 url: `action/${actionId}`,
                 method: "DELETE",
             }),
-            invalidatesTags: ["Action"],
+            invalidatesTags: (result, error, arg) => [
+                { type: "Action", id: arg },
+            ],
         }),
     }),
 });
@@ -89,7 +135,9 @@ export const {
     useGetUsersQuery,
     useLazyGetUsersQuery,
     useCreatePairMutation,
-    useCreateOrUpdateActionsMutation,
+    // useCreateOrUpdateActionsMutation,
+    useCreateActionsMutation,
+    useUpdateActionsMutation,
     useGetActionsByTypeQuery,
     useLazyGetActionsByTypeQuery,
     useGetActionsByUserQuery,
