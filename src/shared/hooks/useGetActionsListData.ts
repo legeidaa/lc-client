@@ -36,7 +36,6 @@ export const useGetActionsListData = () => {
             },
             { skip: !isGameLoadingSuccess && !user }
         );
-
     
     return {
         params,

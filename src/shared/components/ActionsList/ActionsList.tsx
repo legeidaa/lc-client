@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import styles from "./ActionsList.module.scss";
 import { Input } from "../Input/Input";
 import {
@@ -15,6 +15,7 @@ import {
 import { createClientAction } from "@/shared/utils/createClientAction";
 import { isClientAction } from "@/shared/utils/isClientAction";
 import { useGetActionsListData } from "@/shared/hooks/useGetActionsListData";
+import { Button } from "../Button/Button";
 
 export const ActionsList: FC = () => {
     const { actions, actionsType, user, isActionsLoadingSuccess } =
@@ -29,10 +30,11 @@ export const ActionsList: FC = () => {
     const [btnToDelete, setBtnToDelete] = useState<number | null>(null);
     const [clientActions, setClientActions] = useState<Array<Action>>([]);
     const [isSomeFieldsEmpty, setIsSomeFieldsEmpty] = useState(false);
-    const [isFirstRender, setIsFirstRender] = useState(true);
+    const isFirstRender = useRef(true);
+
     useEffect(() => {
         // если в базе менее четырех действий, подмешиваем дополнительные с пометкой, что созданы на клиенте
-        if (isActionsLoadingSuccess && actions && isFirstRender) {
+        if (isActionsLoadingSuccess && actions && isFirstRender.current) {
             function createClientActions(num: number): ClientAction[] {
                 const clientActions: ClientAction[] = new Array(num)
                     .fill(null)
@@ -46,10 +48,9 @@ export const ActionsList: FC = () => {
                 actions.length > 4
                     ? actions
                     : [...actions, ...createClientActions(4 - actions.length)];
-
-            setIsFirstRender(false);
+            isFirstRender.current = false;
             setClientActions(newActions);
-        // }
+            // }
         } else if (isActionsLoadingSuccess && actions) {
             setClientActions([...actions]);
         }
@@ -134,8 +135,6 @@ export const ActionsList: FC = () => {
         Promise.all(actionsQuery);
     };
 
-    console.log("RERENDER", clientActions, actions);
-
     if (!isActionsLoadingSuccess) {
         return <div>Loading...</div>;
     }
@@ -164,19 +163,21 @@ export const ActionsList: FC = () => {
                 ))}
             </ul>
 
-            <div onClick={onAddClick} className={styles.addRow}>
-                <button className="btn btn_round btn_icon">
-                    <CrossIcon />
-                </button>
+            <button onClick={onAddClick} className={styles.addRow}>
+                {/* <Button round icon theme={ButtonTheme.TRANSPARENT} type="button" className={styles.addRowBtn}> */}
+                <CrossIcon />
+                {/* </Button> */}
                 <span>Добавить ещё строку</span>
-            </div>
-
-            <button
-                onClick={saveData}
-                disabled={isCreateActionsLoading || isUpdateActionsLoading}
-            >
-                Готово
             </button>
+            <div className={styles.btnWrapper}>
+                <Button
+                    onClick={saveData}
+                    disabled={isCreateActionsLoading || isUpdateActionsLoading}
+                    type="button"
+                >
+                    Готово
+                </Button>
+            </div>
         </>
     );
 };

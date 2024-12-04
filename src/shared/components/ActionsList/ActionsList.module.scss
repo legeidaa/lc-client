@@ -1,4 +1,55 @@
 .addRow {
     display: flex;
     align-items: center;
+    font-weight: 400;
+    font-size: 24px;
+    color: var(--btn-bg);
+    cursor: pointer;
+    background: none;
+    outline: none;
+    border: none;
+    transition: 0.15s ease-in-out;
+    margin-bottom: 100px;
+
+    span {
+        margin-left: 16px;
+    }
+
+    svg {
+        width: 56px;
+        height: 56px;
+
+        path,
+        circle {
+            transition: 0.15s ease-in-out;
+        }
+    }
+
+    &:hover {
+        color: var(--btn-hover-bg);
+
+        svg {
+
+            path,
+            circle {
+                stroke: var(--btn-hover-bg);
+            }
+        }
+    }
+
+    &:active {
+        color: var(--btn-active-bg);
+
+        svg {
+
+            path,
+            circle {
+                stroke: var(--btn-active-bg);
+            }
+        }
+    }
+}
+
+.btnWrapper {
+    text-align: center;
 }
