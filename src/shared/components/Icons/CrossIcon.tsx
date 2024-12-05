@@ -10,7 +10,7 @@ export const CrossIcon: FC<SVGProps<SVGSVGElement>> = (props) => {
             xmlns="http://www.w3.org/2000/svg"
             {...props}
         >
-            <circle cx="48" cy="48" r="44.5" stroke="white" strokeWidth="7" />
+            <circle cx="48" cy="48" r="44.5" stroke="white" strokeWidth="5" />
             <path
                 d="M31.0259 65.4742L64.9744 31.5258"
                 stroke="white"

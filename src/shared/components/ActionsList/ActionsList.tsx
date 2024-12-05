@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef, useState } from "react";
 import styles from "./ActionsList.module.scss";
-import { Input } from "../Input/Input";
+import { Input, InputTheme } from "../Input/Input";
 import {
     Action,
     ClientAction,
@@ -134,7 +134,9 @@ export const ActionsList: FC = () => {
 
         Promise.all(actionsQuery);
     };
+    console.log(clientActions, actions);
 
+    // TODO заменить на компонент Loading
     if (!isActionsLoadingSuccess) {
         return <div>Loading...</div>;
     }
@@ -145,7 +147,7 @@ export const ActionsList: FC = () => {
                 {clientActions.map(({ title, actionId }, i) => (
                     <li key={actionId} className={styles.listItem}>
                         <Input
-                            inputStyle="action"
+                            theme={i === 0 ? InputTheme.CLOUD : InputTheme.ACTION}
                             value={title}
                             placeholder={"Что вы делаете"}
                             onChange={(e) => onInputChange(e.target.value, i)}

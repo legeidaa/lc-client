@@ -4,6 +4,16 @@ import { ChangeEvent, FC } from "react";
 import styles from "./Input.module.scss";
 import classnames from "classnames";
 import { CrossIcon } from "../icons/CrossIcon";
+import { Button, ButtonTheme } from "../Button/Button";
+
+export const enum InputTheme {
+    SMALL = "small",
+    ACTION = "action",
+    ACTION_WHITE = "actionWhite",
+    COST = "cost",
+    CLOUD = "cloud",
+    CLOUD_L = "cloudL",
+}
 
 interface InputProps extends React.HTMLProps<HTMLInputElement> {
     label?: string;
@@ -11,7 +21,7 @@ interface InputProps extends React.HTMLProps<HTMLInputElement> {
     onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
     onDelete?: () => void;
     errorText?: string;
-    inputStyle: "small" | "action" | "actionWhite" | "cost";
+    theme: InputTheme;
     isDeleteBtnDisabled?: boolean;
 }
 
@@ -22,7 +32,7 @@ export const Input: FC<InputProps> = (props) => {
         onChange,
         onDelete,
         errorText,
-        inputStyle,
+        theme,
         isDeleteBtnDisabled,
         ...otherProps
     } = props;
@@ -35,6 +45,7 @@ export const Input: FC<InputProps> = (props) => {
         <div
             className={classnames(
                 styles.input,
+                styles[theme],
                 className?.split(" ").map((c) => styles[c])
             )}
         >
@@ -44,8 +55,7 @@ export const Input: FC<InputProps> = (props) => {
                 <input
                     className={classnames(
                         styles.inputElement,
-                        styles["inputElement_" + inputStyle],
-                        { inputElementDelete: onDelete }
+                        { [styles.delete as string]: onDelete }
                     )}
                     onChange={onChangeHandler}
                     {...otherProps}
@@ -55,16 +65,27 @@ export const Input: FC<InputProps> = (props) => {
                 <div className={classnames(styles.error)}>{errorText}</div>
             )}
             {onDelete && (
-                <button
+                <Button
                     disabled={isDeleteBtnDisabled}
-                    className={classnames(
-                        "btn btn_round btn_icon",
-                        styles.deleteBtn
-                    )}
+                    className={styles.deleteBtn}
+                    type={"button"}
+                    icon
+                    round
+                    theme={ButtonTheme.TRANSPARENT}
                     onClick={onDelete}
                 >
                     <CrossIcon />
-                </button>
+                </Button>
+                // <button
+                //     disabled={isDeleteBtnDisabled}
+                //     className={classnames(
+                //         "btn btn_round btn_icon",
+                //         styles.deleteBtn
+                //     )}
+                //     onClick={onDelete}
+                // >
+                //     <CrossIcon />
+                // </button>
             )}
         </div>
     );

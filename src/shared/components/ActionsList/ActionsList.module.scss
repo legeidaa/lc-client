@@ -10,14 +10,15 @@
     border: none;
     transition: 0.15s ease-in-out;
     margin-bottom: 100px;
+    padding: 0;
 
     span {
         margin-left: 16px;
     }
 
     svg {
-        width: 56px;
-        height: 56px;
+        width: 70px;
+        height: 70px;
 
         path,
         circle {
@@ -52,4 +53,14 @@
 
 .btnWrapper {
     text-align: center;
+}
+
+.list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.listItem {
+    margin-bottom: 24px;
 }
