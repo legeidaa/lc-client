@@ -9,10 +9,9 @@ import {
     useState,
     useTransition,
 } from "react";
-import { Input } from "../Input/Input";
+import { Input, InputTheme } from "../Input/Input";
 import { SexRadioInput } from "../SexRadioInput/SexRadioInput";
 import styles from "./RegistrationForms.module.scss";
-import classNames from "classnames";
 import {
     useCreatePairMutation,
     useGetGameQuery,
@@ -20,6 +19,8 @@ import {
 } from "@/lib/redux/gameApi";
 import { useRouter, useParams } from "next/navigation";
 import { CreateUserRequest, Sex, User } from "@/shared/interfaces/game";
+import { UserPagesNames } from "@/shared/config/UserPagesNames";
+import { Button } from "../Button/Button";
 
 interface RegFormData {
     "player-name": string;
@@ -75,7 +76,7 @@ export default function RegistrationForms() {
                 );
 
                 setRegFormData({
-                    "player-name": player?.name || "a",
+                    "player-name": player?.name || "",
                     "player-email": player?.email || "",
                     "player-sex": player?.sex || "",
                     "partner-name": partner?.name || "",
@@ -87,48 +88,55 @@ export default function RegistrationForms() {
         fetchUsers();
     }, [gameId, getUsersQuery]);
 
-    const handleSubmmit = useCallback(async (e: FormEvent) => {
-        e.preventDefault();
-        startSubmitTransition(async () => {
-            if (users.length < 2) {
-                const createPlayerRequest: CreateUserRequest = {
-                    gameId: Number(gameId),
-                    name: regFormData["player-name"],
-                    email: regFormData["player-email"],
-                    sex: regFormData["player-sex"] as Sex,
-                    role: "player",
-                };
-    
-                const createPartnerRequest: CreateUserRequest = {
-                    gameId: Number(gameId),
-                    name: regFormData["partner-name"],
-                    email: regFormData["partner-email"],
-                    sex: regFormData["partner-sex"] as Sex,
-                    role: "partner",
-                };
-    
-                const response = await createPair([
-                    createPlayerRequest,
-                    createPartnerRequest,
-                ]);
-    
-                if (response.error) {
-                    console.error(response.error);
+    const handleSubmmit = useCallback(
+        async (e: FormEvent) => {
+            e.preventDefault();
+            startSubmitTransition(async () => {
+                if (users.length < 2) {
+                    const createPlayerRequest: CreateUserRequest = {
+                        gameId: Number(gameId),
+                        name: regFormData["player-name"],
+                        email: regFormData["player-email"],
+                        sex: regFormData["player-sex"] as Sex,
+                        role: "player",
+                    };
+
+                    const createPartnerRequest: CreateUserRequest = {
+                        gameId: Number(gameId),
+                        name: regFormData["partner-name"],
+                        email: regFormData["partner-email"],
+                        sex: regFormData["partner-sex"] as Sex,
+                        role: "partner",
+                    };
+
+                    const response = await createPair([
+                        createPlayerRequest,
+                        createPartnerRequest,
+                    ]);
+
+                    if (response.error) {
+                        console.error(response.error);
+                    } else {
+                        setReadonly(true);
+                        router.push(
+                            `/game/${gameHash}/player/${UserPagesNames.PLAYER_TO_PARTNER}`
+                        );
+                    }
                 } else {
-                    setReadonly(true);
-                    router.push(`/game/${gameHash}/player/pl-to-pr`);
+                    router.push(
+                        `/game/${gameHash}/player/${UserPagesNames.PLAYER_TO_PARTNER}`
+                    );
                 }
-            } else {
-                router.push(`/game/${gameHash}/player/pl-to-pr`);
-            }
-        })
-    }, [createPair, gameHash, gameId, regFormData, router, users]);
+            });
+        },
+        [createPair, gameHash, gameId, regFormData, router, users]
+    );
 
     const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setRegFormData((prev) => ({ ...prev, [name]: value }));
     };
-    
+
     return (
         <form ref={form} onSubmit={handleSubmmit}>
             <div className={styles.wrapper}>
@@ -140,7 +148,7 @@ export default function RegistrationForms() {
                         <Input
                             name="player-name"
                             id="player-name"
-                            inputStyle="small"
+                            theme={InputTheme.SMALL}
                             type="text"
                             label="Ваше имя:"
                             value={regFormData["player-name"]}
@@ -151,7 +159,7 @@ export default function RegistrationForms() {
                         <Input
                             name="player-email"
                             id="player-email"
-                            inputStyle="small"
+                            theme={InputTheme.SMALL}
                             type="email"
                             value={regFormData["player-email"]}
                             label="Ваша электронная почта:"
@@ -193,7 +201,7 @@ export default function RegistrationForms() {
                             name="partner-name"
                             id="partner-name"
                             type="text"
-                            inputStyle="small"
+                            theme={InputTheme.SMALL}
                             value={regFormData["partner-name"]}
                             label="Ваше имя:"
                             readOnly={readonly}
@@ -203,7 +211,7 @@ export default function RegistrationForms() {
                             name="partner-email"
                             id="partner-email"
                             type="email"
-                            inputStyle="small"
+                            theme={InputTheme.SMALL}
                             value={regFormData["partner-email"]}
                             label="Ваша электронная почта:"
                             readOnly={readonly}
@@ -255,13 +263,9 @@ export default function RegistrationForms() {
                 </li>
             </ul>
             <div className={styles.submitBtnWrapper}>
-                <button
-                    className={classNames("btn", styles.submitBtn)}
-                    type="submit"
-                    disabled={isSubmitPending}
-                >
+                <Button type="submit" disabled={isSubmitPending}>
                     ВСЕ ПОНЯТНО
-                </button>
+                </Button>
             </div>
         </form>
     );

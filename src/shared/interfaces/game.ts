@@ -51,3 +51,9 @@ export interface Game {
     currentUserRole: Role;
     users: User[];
 }
+
+
+export interface UpdateResourcesRequest {
+    userId: number;
+    hasResources: boolean;
+}

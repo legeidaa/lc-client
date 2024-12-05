@@ -3,6 +3,7 @@ import {
     CreateActionsRequest,
     CreateUserRequest,
     Game,
+    UpdateResourcesRequest,
     User,
 } from "@/shared/interfaces/game";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
@@ -23,6 +24,7 @@ export const gameApi = createApi({
 
         getGame: builder.query<Game, string>({
             query: (hash) => `game/${hash}`,
+            providesTags: ["User"],
         }),
 
         // user
@@ -34,14 +36,14 @@ export const gameApi = createApi({
             }),
         }),
 
-        // updateUser: builder.mutation<User, User>({
-        //     query: (user) => ({
-        //         url: `user/${user.userId}`,
-        //         method: "PATCH",
-        //         body: user,
-        //     }),
-        //     invalidatesTags: ['User'],
-        // }),
+        updateUserResources: builder.mutation<User, UpdateResourcesRequest>({
+            query: (updateResourcesBody) => ({
+                url: `user/resources`,
+                method: "PATCH",
+                body: updateResourcesBody,
+            }),
+            invalidatesTags: ['User'],
+        }),
 
         getUsers: builder.query<User[], number>({
             query: (hash) => `user/${hash}`,
@@ -49,15 +51,7 @@ export const gameApi = createApi({
         }),
 
         // action
-        // если передается без actionId, то создается новый, в ином случае обновляется
-        // createOrUpdateActions: builder.mutation<Action[], Array<Action | Omit<Action, "actionId">> >({
-        //     query: (actions) => ({
-        //         url: "action",
-        //         method: "POST",
-        //         body: actions,
-        //     }),
-        //     invalidatesTags: ["Action"],
-        // }),
+
         createActions: builder.mutation<Action, CreateActionsRequest>({
             query: (actions) => ({
                 url: "action",
@@ -135,6 +129,7 @@ export const {
     useGetUsersQuery,
     useLazyGetUsersQuery,
     useCreatePairMutation,
+    useUpdateUserResourcesMutation,
     // useCreateOrUpdateActionsMutation,
     useCreateActionsMutation,
     useUpdateActionsMutation,

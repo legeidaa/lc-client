@@ -3,9 +3,16 @@
 import { ActionsList } from "@/shared/components/ActionsList/ActionsList";
 import { PageDescription } from "@/shared/components/PageDescription/PageDescription";
 import styles from "./page.module.scss";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useGetGameQuery } from "@/lib/redux/gameApi";
+import { UserPagesNames } from "@/shared/config/UserPagesNames";
 
 
 export default function Home() {
+    const params = useParams<{ hash: string; user: string }>();
+    const { data: game } = useGetGameQuery(params.hash);
+
     return (
         <div className="container">
             <PageDescription textAlign="center">
@@ -48,6 +55,8 @@ export default function Home() {
                 </div>
             </div>
             <ActionsList />
+
+            <Link href={`/game/${game?.gameHash}/player/${UserPagesNames.RESOURCES}`}>Следующая страница</Link>
         </div>
     );
 }

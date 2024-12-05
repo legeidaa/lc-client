@@ -1,10 +1,12 @@
 "use client";
 import { useCreateGameMutation } from "@/lib/redux/gameApi";
+import { Button } from "@/shared/components/Button/Button";
 import { StartInfo } from "@/shared/components/StartInfo/StartInfo";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function Payment() {
     const [createGameMutation, createGameResult] = useCreateGameMutation();
+    const router = useRouter();
 
     const createGame = async () => {
         // здесь сперва оплата, потом создание игры при успехе
@@ -14,16 +16,12 @@ export default function Payment() {
         return <div>Loading...</div>;
     }
     if (createGameResult.isSuccess) {
-
-        // TODO заменить на router.push
-        redirect(`/game/${createGameResult.data.gameHash}/start`);
+        router.push(`/game/${createGameResult.data.gameHash}/start`);
     }
     return (
         <div className="container">
             <StartInfo />
-            <button className="btn" onClick={createGame}>
-                ОПЛАТИТЬ
-            </button>
+            <Button type="button" onClick={createGame}>ОПЛАТИТЬ</Button>
         </div>
     );
 }
