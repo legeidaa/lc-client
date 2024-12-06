@@ -1,12 +1,12 @@
 "use client";
 
-import { ActionsList } from "@/shared/components/ActionsList/ActionsList";
 import { PageDescription } from "@/shared/components/PageDescription/PageDescription";
 import styles from "./page.module.scss";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useGetGameQuery } from "@/lib/redux/gameApi";
 import { UserPagesNames } from "@/shared/config/UserPagesNames";
+import { ActionsListController } from "@/shared/components/ActionsListController/ActionsListController";
 
 
 export default function Home() {
@@ -54,7 +54,7 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-            <ActionsList />
+            <ActionsListController />
 
             <Link href={`/game/${game?.gameHash}/player/${UserPagesNames.RESOURCES}`}>Следующая страница</Link>
         </div>

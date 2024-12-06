@@ -1,11 +1,11 @@
 "use client";
 
-import { ActionsList } from "@/shared/components/ActionsList/ActionsList";
 import { PageDescription } from "@/shared/components/PageDescription/PageDescription";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useGetGameQuery } from "@/lib/redux/gameApi";
 import { UserPagesNames } from "@/shared/config/UserPagesNames";
+import { ActionsListController } from "@/shared/components/ActionsListController/ActionsListController";
 
 export default function Home() {
     const params = useParams<{ hash: string; user: string }>();
@@ -24,7 +24,7 @@ export default function Home() {
                 </p>
             </PageDescription>
 
-            <ActionsList />
+            <ActionsListController />
 
             <Link
                 href={`/game/${game?.gameHash}/player/${UserPagesNames.PLAYER_TO_PARTNER_COST}`}
