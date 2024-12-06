@@ -16,6 +16,7 @@ import { createClientAction } from "@/shared/utils/createClientAction";
 import { isClientAction } from "@/shared/utils/isClientAction";
 import { useGetActionsListData } from "@/shared/hooks/useGetActionsListData";
 import { Button } from "../Button/Button";
+import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
 
 export const ActionsList: FC = () => {
     const { actions, actionsType, user, isActionsLoadingSuccess } =
@@ -138,7 +139,7 @@ export const ActionsList: FC = () => {
 
     // TODO заменить на компонент Loading
     if (!isActionsLoadingSuccess) {
-        return <div>Loading...</div>;
+        return <LoadingSpinner />
     }
 
     return (
@@ -159,16 +160,14 @@ export const ActionsList: FC = () => {
                             }
                         />
                         {isSomeFieldsEmpty && title.length === 0 && (
-                            <div>Поле не должно быть пустым</div>
+                            <div className={styles.emptyField}>Поле не должно быть пустым</div>
                         )}
                     </li>
                 ))}
             </ul>
 
             <button onClick={onAddClick} className={styles.addRow}>
-                {/* <Button round icon theme={ButtonTheme.TRANSPARENT} type="button" className={styles.addRowBtn}> */}
                 <CrossIcon />
-                {/* </Button> */}
                 <span>Добавить ещё строку</span>
             </button>
             <div className={styles.btnWrapper}>

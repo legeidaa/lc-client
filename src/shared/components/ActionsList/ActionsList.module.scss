@@ -62,5 +62,18 @@
 }
 
 .listItem {
+    &:first-child {
+        margin-bottom: 38px;
+        .emptyField {
+            bottom: -12px;
+            position: relative;
+        }
+    }
     margin-bottom: 24px;
+}
+
+.emptyField {
+    padding-top: 12px;
+    padding-left: 32px;
+    font-size: 20px;
 }

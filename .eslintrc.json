@@ -19,7 +19,7 @@
         "plugin:react-hooks/recommended"
     ],
     "parserOptions": {
-        "project": "./tsconfig.json"
+        // "project": "./tsconfig.json"
     },
     "settings": {
         "react": {
