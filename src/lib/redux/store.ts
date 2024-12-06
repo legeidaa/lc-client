@@ -1,10 +1,8 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { gameInfoReducer } from "./gameSlice";
 import { gameApi } from "./gameApi";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
 export const rootReducer = combineReducers({
-    gameInfo: gameInfoReducer,
     [gameApi.reducerPath]: gameApi.reducer,
 });
 
