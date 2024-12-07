@@ -59,17 +59,33 @@
     list-style: none;
     padding: 0;
     margin: 0;
+    &.expectationsList {
+        padding: 0 32px 0 48px;
+    }
 }
 
 .listItem {
-    &:first-child {
-        margin-bottom: 38px;
+    margin-bottom: 24px;
+
+    &.cloud {
+        margin-bottom: 36px;
+
         .emptyField {
             bottom: -12px;
             position: relative;
         }
     }
-    margin-bottom: 24px;
+
+    &.cloudL {
+        margin-bottom: 56px;
+
+        .emptyField {
+            bottom: -32px;
+            position: relative;
+        }
+    }
+
+
 }
 
 .emptyField {

@@ -1,7 +1,9 @@
 import {
     Action,
     CreateActionsRequest,
+    CreateExpectationRequest,
     CreateUserRequest,
+    Expectation,
     Game,
     UpdateResourcesRequest,
     User,
@@ -12,7 +14,7 @@ export const apiUrl = "http://localhost:3001/api/";
 export const gameApi = createApi({
     reducerPath: "gameApi",
     baseQuery: fetchBaseQuery({ baseUrl: apiUrl }),
-    tagTypes: ["User", "Action"],
+    tagTypes: ["User", "Action", "Expectation"],
     endpoints: (builder) => ({
         // game
         createGame: builder.mutation<Game, void>({
@@ -42,7 +44,7 @@ export const gameApi = createApi({
                 method: "PATCH",
                 body: updateResourcesBody,
             }),
-            invalidatesTags: ['User'],
+            invalidatesTags: ["User"],
         }),
 
         getUsers: builder.query<User[], number>({
@@ -119,6 +121,49 @@ export const gameApi = createApi({
                 { type: "Action", id: arg },
             ],
         }),
+
+        // expectation
+
+        createExpectations: builder.mutation<
+            Expectation,
+            CreateExpectationRequest
+        >({
+            query: (expectations) => ({
+                url: "expectation",
+                method: "POST",
+                body: expectations,
+            }),
+            invalidatesTags: ["Expectation"],
+        }),
+
+        getExpectations: builder.query<Expectation[], number>({
+            query: (userId) => ({
+                url: `expectation?userId=${userId}`,
+            }),
+            providesTags: ["Expectation"],
+        }),
+
+        updateExpectations: builder.mutation<Expectation[], Expectation[]>({
+            query: (expectations) => ({
+                url: "expectation",
+                method: "PATCH",
+                body: expectations,
+            }),
+            invalidatesTags: ["Expectation"],
+        }),
+
+        deleteExpectation: builder.mutation<
+            { success: boolean; id: number },
+            number
+        >({
+            query: (expectationId) => ({
+                url: `expectation/${expectationId}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: "Expectation", id: arg },
+            ],
+        }),
     }),
 });
 
@@ -138,4 +183,8 @@ export const {
     useGetActionsByUserQuery,
     useLazyGetActionsByUserQuery,
     useDeleteActionMutation,
+    useCreateExpectationsMutation,
+    useGetExpectationsQuery,
+    useUpdateExpectationsMutation,
+    useDeleteExpectationMutation,
 } = gameApi;

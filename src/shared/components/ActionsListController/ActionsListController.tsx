@@ -13,7 +13,7 @@ import { createClientAction } from "@/shared/utils/createClientAction";
 import { isClientAction } from "@/shared/utils/isClientAction";
 import { useGetActionsListData } from "@/shared/hooks/useGetActionsListData";
 import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
-import { ActionsList } from "../ActionsList/ActionsList";
+import { InputsList } from "../InputsList/InputsList";
 import { InputTheme } from "../Input/Input";
 
 export const ActionsListController: FC = () => {
@@ -140,7 +140,7 @@ export const ActionsListController: FC = () => {
     }
 
     return (
-        <ActionsList
+        <InputsList
             actions={clientActions}
             btnToDelete={btnToDelete}
             isReadyBtnDisabled={

@@ -35,7 +35,7 @@
 
     &.actionWhite {}
 
-    &.cloud {
+    &.cloud, &.cloudL {
         .inputElement {
             border: 3px solid var(--pink);
             height: 70px;
@@ -77,6 +77,19 @@
             border-radius: 100px;
         }
     }
+    &.cloudL {
+        &::before {
+            border-radius: 0 100px 100px 100px;
+            width: calc(100% + 80px);
+            height: calc(100% + 64px);
+            left: -48px;
+            top: -32px;
+        }
+        &::after {
+            display: none;
+        }
+    }
+    
 
     // &_choice {
     //     height: 65px;
@@ -129,7 +142,7 @@
     color: var(--white);
     background: transparent;
     font-weight: 400;
-    transition: 0.15s ease-in-out;
+    transition: 0.15s ease-in-out box-shadow;
 
     &::placeholder {
         opacity: 0.7;

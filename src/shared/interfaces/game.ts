@@ -7,6 +7,9 @@ export interface Expectation {
     title: string;
     userId: number;
 }
+export interface ClientExpectation extends Expectation {
+    client: boolean;
+}
 
 export interface Action {
     actionId: number;
@@ -22,6 +25,10 @@ export interface ClientAction extends Action {
 
 export type CreateActionsRequest = Array<
     Pick<Action, "userId" | "type" | "title">
+>;
+
+export type CreateExpectationRequest = Array<
+    Pick<Expectation, "title" | "userId">
 >;
 
 export interface User {
@@ -51,7 +58,6 @@ export interface Game {
     currentUserRole: Role;
     users: User[];
 }
-
 
 export interface UpdateResourcesRequest {
     userId: number;
