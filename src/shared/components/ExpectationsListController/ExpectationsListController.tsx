@@ -1,7 +1,6 @@
 import { FC, useEffect, useRef, useState } from "react";
 import {
     ClientExpectation,
-    CreateExpectationRequest,
     Expectation,
     User,
 } from "@/shared/interfaces/game";
@@ -16,6 +15,8 @@ import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
 import { InputsList } from "../InputsList/InputsList";
 import { InputTheme } from "../Input/Input";
 import { useParams } from "next/navigation";
+import { updateInputsData } from "@/shared/utils/InputsListFuncs/updateInputItems";
+import { saveInputsListData } from "@/shared/utils/InputsListFuncs/saveInputsListData";
 
 export const createClientExpectation = (user: User): ClientExpectation => {
     return {
@@ -92,19 +93,13 @@ export const ExpectationsListController: FC = () => {
     }, [expectations, isExpectationsLoadingSuccess, user]);
 
     const onInputChange = (value: string, i: number) => {
-        const newExpectations = [...clientExpectations];
-        if (newExpectations[i]) {
-            const newAction = { ...newExpectations[i] };
-            newAction.title = value;
-            newExpectations[i] = newAction;
-            setClientExpectations(newExpectations);
-        }
-        const isSomeFieldsEmpty = newExpectations.some(
-            (expectation) => !expectation.title
+        updateInputsData(
+            value,
+            i,
+            clientExpectations,
+            setClientExpectations,
+            setIsSomeFieldsEmpty
         );
-        if (!isSomeFieldsEmpty) {
-            setIsSomeFieldsEmpty(false);
-        }
     };
 
     const onAddClick = () => {
@@ -143,38 +138,14 @@ export const ExpectationsListController: FC = () => {
     };
 
     const saveData = async () => {
-        const isSomeFieldsEmpty = clientExpectations.some(
-            (expectation) => !expectation.title
+        saveInputsListData(
+            clientExpectations,
+            isClientExpectation,
+            createExpectations,
+            updateExpectations,
+            setIsSomeFieldsEmpty,
+            user
         );
-        if (isSomeFieldsEmpty) {
-            setIsSomeFieldsEmpty(true);
-            return;
-        }
-        const expectationsToUpdate: Expectation[] = [];
-        const expectationsToCreate: CreateExpectationRequest = [];
-
-        clientExpectations.forEach((expectation) => {
-            if (isClientExpectation(expectation)) {
-                expectationsToCreate.push({
-                    title: expectation.title,
-                    userId: user.userId,
-                });
-            } else {
-                expectationsToUpdate.push(expectation);
-            }
-        });
-        console.log(expectationsToUpdate, expectationsToCreate);
-
-        const actionsQuery = [];
-        if (expectationsToCreate.length > 0) {
-            actionsQuery.push(createExpectations(expectationsToCreate));
-        }
-        if (expectationsToUpdate.length > 0) {
-            actionsQuery.push(updateExpectations(expectationsToUpdate));
-        }
-
-        // todo обернуть в try catch
-        await Promise.all(actionsQuery);
     };
 
     console.log(clientExpectations, expectations);

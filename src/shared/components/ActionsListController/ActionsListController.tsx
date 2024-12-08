@@ -2,7 +2,6 @@ import { FC, useEffect, useRef, useState } from "react";
 import {
     Action,
     ClientAction,
-    CreateActionsRequest,
 } from "@/shared/interfaces/game";
 import {
     useCreateActionsMutation,
@@ -15,6 +14,8 @@ import { useGetActionsListData } from "@/shared/hooks/useGetActionsListData";
 import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
 import { InputsList } from "../InputsList/InputsList";
 import { InputTheme } from "../Input/Input";
+import { updateInputsData } from "@/shared/utils/InputsListFuncs/updateInputItems";
+import { saveInputsListData } from "@/shared/utils/InputsListFuncs/saveInputsListData";
 
 export const ActionsListController: FC = () => {
     const { actions, actionsType, user, isActionsLoadingSuccess } =
@@ -56,17 +57,13 @@ export const ActionsListController: FC = () => {
     }, [actions, actionsType, isActionsLoadingSuccess, user]);
 
     const onInputChange = (value: string, i: number) => {
-        const newActions = [...clientActions];
-        if (newActions[i]) {
-            const newAction = { ...newActions[i] };
-            newAction.title = value;
-            newActions[i] = newAction;
-            setClientActions(newActions);
-        }
-        const isSomeFieldsEmpty = newActions.some((action) => !action.title);
-        if (!isSomeFieldsEmpty) {
-            setIsSomeFieldsEmpty(false);
-        }
+        updateInputsData(
+            value,
+            i,
+            clientActions,
+            setClientActions,
+            setIsSomeFieldsEmpty
+        );
     };
 
     const onAddClick = () => {
@@ -102,38 +99,15 @@ export const ActionsListController: FC = () => {
     };
 
     const saveData = async () => {
-        const isSomeFieldsEmpty = clientActions.some((action) => !action.title);
-        if (isSomeFieldsEmpty) {
-            setIsSomeFieldsEmpty(true);
-            return;
-        }
-        const actionsToUpdate: Action[] = [];
-        const actionsToCreate: CreateActionsRequest = [];
-
-        clientActions.forEach((action) => {
-            if (isClientAction(action)) {
-                actionsToCreate.push({
-                    title: action.title,
-                    type: action.type,
-                    userId: user.userId,
-                });
-            } else {
-                actionsToUpdate.push(action);
-            }
-        });
-        console.log(actionsToUpdate, actionsToCreate);
-
-        const actionsQuery = [];
-        if (actionsToCreate.length > 0) {
-            actionsQuery.push(createActions(actionsToCreate));
-        }
-        if (actionsToUpdate.length > 0) {
-            actionsQuery.push(updateActions(actionsToUpdate));
-        }
-
-        await Promise.all(actionsQuery);
+        saveInputsListData(
+            clientActions,
+            isClientAction,
+            createActions,
+            updateActions,
+            setIsSomeFieldsEmpty,
+            user
+        );
     };
-    // console.log(clientActions, actions);
 
     if (!isActionsLoadingSuccess) {
         return <LoadingSpinner />;

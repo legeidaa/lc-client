@@ -23,13 +23,11 @@ export interface ClientAction extends Action {
     client: boolean;
 }
 
-export type CreateActionsRequest = Array<
-    Pick<Action, "userId" | "type" | "title">
->;
+export type ActionToCreate = Pick<Action, "userId" | "type" | "title">;
+export type CreateActionsRequest = Array<ActionToCreate>;
 
-export type CreateExpectationRequest = Array<
-    Pick<Expectation, "title" | "userId">
->;
+export type ExpectationToCreate = Pick<Expectation, "title" | "userId">;
+export type CreateExpectationRequest = Array<ExpectationToCreate>;
 
 export interface User {
     userId: number;
