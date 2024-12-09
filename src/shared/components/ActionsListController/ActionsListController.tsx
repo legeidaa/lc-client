@@ -1,8 +1,5 @@
 import { FC, useEffect, useRef, useState } from "react";
-import {
-    Action,
-    ClientAction,
-} from "@/shared/interfaces/game";
+import { Action, ClientAction } from "@/shared/interfaces/game";
 import {
     useCreateActionsMutation,
     useDeleteActionMutation,
@@ -16,6 +13,7 @@ import { InputsList } from "../InputsList/InputsList";
 import { InputTheme } from "../Input/Input";
 import { updateInputsData } from "@/shared/utils/InputsListFuncs/updateInputItems";
 import { saveInputsListData } from "@/shared/utils/InputsListFuncs/saveInputsListData";
+import { deleteInputItem } from "@/shared/utils/InputsListFuncs/deleteInputItem";
 
 export const ActionsListController: FC = () => {
     const { actions, actionsType, user, isActionsLoadingSuccess } =
@@ -74,28 +72,14 @@ export const ActionsListController: FC = () => {
     };
 
     const onRowDelete = async (actionId: number) => {
-        const toDelete = clientActions.find(
-            (action) => action.actionId === actionId
+        deleteInputItem(
+            actionId,
+            clientActions,
+            isClientAction,
+            setClientActions,
+            setBtnToDelete,
+            deleteAction
         );
-
-        if (!toDelete) throw new Error("Action not found");
-
-        if (isClientAction(toDelete)) {
-            setClientActions(
-                clientActions.filter((action) => action.actionId !== actionId)
-            );
-        } else {
-            setBtnToDelete(actionId);
-            const deleted = await deleteAction(actionId).unwrap();
-            if (deleted.success) {
-                setBtnToDelete(null);
-                setClientActions(
-                    clientActions.filter(
-                        (action) => action.actionId !== actionId
-                    )
-                );
-            }
-        }
     };
 
     const saveData = async () => {

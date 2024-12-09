@@ -9,17 +9,18 @@ import {
 } from "@/lib/redux/gameApi";
 import { useParams } from "next/navigation";
 import { User } from "@/shared/interfaces/game";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { UserPagesNames } from "@/shared/config/UserPagesNames";
 
 export default function Resources() {
     const params = useParams<{ hash: string; user: string }>();
+    const router = useRouter();
+
     const { data: game } = useGetGameQuery(params.hash);
-    // const router = useRouter();
+    const [updateResources, {isLoading: isUpdateResourcesLoading }] = useUpdateUserResourcesMutation();
 
     const user: User = game?.users.find((u) => u.role === params.user) as User;
-
-    const [updateResources, {isLoading: isUpdateResourcesLoading }] = useUpdateUserResourcesMutation();
 
     const handleChangeResources = async (data: boolean) => {
         if (!user) throw new Error("Пользователь не найден");
@@ -29,7 +30,7 @@ export default function Resources() {
             userId: user.userId,
         });   
 
-        // router.push(`/game/${game?.gameHash}/player/pr-to-pl`);
+        router.push(`/game/${game?.gameHash}/player/${UserPagesNames.PARTNER_TO_PLAYER}`);
     };   
 
     return (

@@ -1,9 +1,5 @@
 import { FC, useEffect, useRef, useState } from "react";
-import {
-    ClientExpectation,
-    Expectation,
-    User,
-} from "@/shared/interfaces/game";
+import { ClientExpectation, Expectation, User } from "@/shared/interfaces/game";
 import {
     useCreateExpectationsMutation,
     useDeleteExpectationMutation,
@@ -17,6 +13,7 @@ import { InputTheme } from "../Input/Input";
 import { useParams } from "next/navigation";
 import { updateInputsData } from "@/shared/utils/InputsListFuncs/updateInputItems";
 import { saveInputsListData } from "@/shared/utils/InputsListFuncs/saveInputsListData";
+import { deleteInputItem } from "@/shared/utils/InputsListFuncs/deleteInputItem";
 
 export const createClientExpectation = (user: User): ClientExpectation => {
     return {
@@ -110,31 +107,14 @@ export const ExpectationsListController: FC = () => {
     };
 
     const onRowDelete = async (expectationId: number) => {
-        const toDelete = clientExpectations.find(
-            (expectation) => expectation.expectationId === expectationId
+        deleteInputItem(
+            expectationId,
+            clientExpectations,
+            isClientExpectation,
+            setClientExpectations,
+            setBtnToDelete,
+            deleteExpectation
         );
-
-        if (!toDelete) throw new Error("Action not found");
-
-        if (isClientExpectation(toDelete)) {
-            setClientExpectations(
-                clientExpectations.filter(
-                    (expectation) => expectation.expectationId !== expectationId
-                )
-            );
-        } else {
-            setBtnToDelete(expectationId);
-            const deleted = await deleteExpectation(expectationId).unwrap();
-            if (deleted.success) {
-                setBtnToDelete(null);
-                setClientExpectations(
-                    clientExpectations.filter(
-                        (expectation) =>
-                            expectation.expectationId !== expectationId
-                    )
-                );
-            }
-        }
     };
 
     const saveData = async () => {
@@ -147,8 +127,6 @@ export const ExpectationsListController: FC = () => {
             user
         );
     };
-
-    console.log(clientExpectations, expectations);
 
     if (!isExpectationsLoadingSuccess) {
         return <LoadingSpinner />;

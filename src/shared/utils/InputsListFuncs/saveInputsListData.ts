@@ -67,6 +67,6 @@ export const saveInputsListData = async <T extends Action | Expectation>(
     if (itemsToUpdate.length > 0) {
         queries.push(updateFunction(itemsToUpdate));
     }
-    // todo: wrap in try-catch
+    
     await Promise.all(queries);
 };

@@ -5,7 +5,7 @@ export const updateInputsData = <T extends Action | Expectation>(
     value: string,
     i: number,
     items: T[],
-    setter: (value: SetStateAction<T[]>) => void,
+    setClientItems: (value: SetStateAction<T[]>) => void,
     setIsSomeFieldsEmpty: (value: SetStateAction<boolean>) => void
 ) => {
     const newItems = [...items];
@@ -13,7 +13,7 @@ export const updateInputsData = <T extends Action | Expectation>(
         const newItem = { ...newItems[i] };
         newItem.title = value;
         newItems[i] = newItem;
-        setter(newItems);
+        setClientItems(newItems);
     }
     const isSomeFieldsEmpty = newItems.some((item) => !item.title);
     if (!isSomeFieldsEmpty) {
