@@ -3,14 +3,14 @@
 import { ChangeEvent, FC } from "react";
 import styles from "./Input.module.scss";
 import classnames from "classnames";
-import { CrossIcon } from "../icons/CrossIcon";
+import { CrossIcon } from "../Icons/CrossIcon";
 import { Button, ButtonTheme } from "../Button/Button";
 
 export const enum InputTheme {
     SMALL = "small",
     ACTION = "action",
     ACTION_WHITE = "actionWhite",
-    COST = "cost",
+    ESTIMATE = "estimate",
     CLOUD = "cloud",
     CLOUD_L = "cloudL",
 }
@@ -40,13 +40,13 @@ export const Input: FC<InputProps> = (props) => {
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         onChange?.(e);
     };
-
+    
     return (
         <div
             className={classnames(
                 styles.input,
                 styles[theme],
-                className?.split(" ").map((c) => styles[c])
+                className
             )}
         >
             <label className={styles.labelWrapper}>

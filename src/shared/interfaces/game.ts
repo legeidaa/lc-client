@@ -13,7 +13,7 @@ export interface ClientExpectation extends Expectation {
 
 export interface Action {
     actionId: number;
-    cost: number | null;
+    estimate: number | null;
     title: string;
     type: ActionType;
     userId: number;

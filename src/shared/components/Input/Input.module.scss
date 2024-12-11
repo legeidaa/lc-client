@@ -12,7 +12,8 @@
         }
     }
 
-    &.action {
+    &.action,
+    &.actionWhite {
         .inputElement {
             border: 3px solid var(--white);
             height: 70px;
@@ -33,9 +34,27 @@
         }
     }
 
-    &.actionWhite {}
+    &.actionWhite {
+        .inputElement {
+            background: var(--white);
+            color: var(--pink);
+            overflow: auto !important;
+            &:read-only {
 
-    &.cloud, &.cloudL {
+                &:focus,
+                &:focus-visible {
+                    box-shadow: none;
+                }
+            }
+        }
+
+        &::before {
+            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.21);
+        }
+    }
+
+    &.cloud,
+    &.cloudL {
         .inputElement {
             border: 3px solid var(--pink);
             height: 70px;
@@ -43,18 +62,23 @@
             font-size: 30px;
             color: var(--pink);
             padding: 0 28px;
+
             &::placeholder {
                 color: var(--pink);
                 opacity: 0.7;
             }
         }
+
         .deleteBtn {
             svg {
-                path, circle {
+
+                path,
+                circle {
                     stroke: var(--pink);
                 }
             }
         }
+
         &::before {
             content: '';
             display: block;
@@ -67,6 +91,7 @@
             border-radius: 100px;
             background: var(--white);
         }
+
         &::after {
             content: url("data:image/svg+xml,%3Csvg width='67' height='24' viewBox='0 0 67 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 23L34.3521 1L51.4789 4.06977L65 13.7907L1 23Z' fill='white' stroke='white' stroke-linecap='round' /%3E%3C/svg%3E");
             position: absolute;
@@ -77,6 +102,7 @@
             border-radius: 100px;
         }
     }
+
     &.cloudL {
         &::before {
             border-radius: 0 100px 100px 100px;
@@ -85,28 +111,24 @@
             left: -48px;
             top: -32px;
         }
+
         &::after {
             display: none;
         }
     }
-    
 
-    // &_choice {
-    //     height: 65px;
-    //     padding: 15px 45px;
-    //     font-weight: 500;
-    //     font-size: 28px;
-    //     border-radius: 0 100px 100px 100px;
-    // }
-
-    // &.weight {
-    //     text-align: center;
-    //     height: 65px;
-    //     font-weight: 500;
-    //     font-size: 28px;
-    //     border-radius: 0 100px 100px 100px;
-    //     width: 140px;
-    // }
+    &.estimate {
+        .inputElement {
+            border: 3px solid var(--white);
+            color: var(--white);
+            border-radius: 100px;
+            width: 111px;
+            height: 70px;
+            font-weight: 400;
+            font-size: 30px;
+            text-align: center;
+        }
+    }
 }
 
 .label {

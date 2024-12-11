@@ -1,46 +1,49 @@
-import {
-    useGetActionsByTypeQuery,
-    useGetGameQuery,
-} from "@/lib/redux/gameApi";
-import { ActionType, Role, User } from "../interfaces/game";
+import { useGetActionsByTypeQuery, useGetGameQuery } from "@/lib/redux/gameApi";
+import { Role, User } from "../interfaces/game";
 import { useParams, usePathname } from "next/navigation";
 import { getActionsType } from "../utils/getActionsType";
+import { userPagesNamesWithActions } from "../config/UserPagesNames";
 
 export const useGetActionsListData = () => {
     const params = useParams<{ hash: string; user: string }>();
-    const path = usePathname()
-    let pageName: "pl-to-pr" | "pr-to-pl" | undefined;
-    
-    if (path.includes("pl-to-pr")) {
-        pageName = "pl-to-pr";
-    } else if (path.includes("pr-to-pl")) {
-        pageName = "pr-to-pl";
-    }
+    const path = usePathname();
 
-    if (pageName === undefined) throw new Error("На этой странице нельзя получить тип действия");
+    let pageName: (typeof userPagesNamesWithActions)[number] | undefined;
+
+    userPagesNamesWithActions.forEach((name) => {
+        if (path.includes(name)) {
+            pageName = name;
+        }
+    });
+
+    if (pageName === undefined) {
+        throw new Error("На этой странице нельзя получить тип действия");
+    }
 
     const { data: game, isSuccess: isGameLoadingSuccess } = useGetGameQuery(
         params.hash
     );
-    const user: User = game?.users.find((u) => u.role === params.user) as User;
+    const currentUser: User = game?.users.find(
+        (u) => u.role === params.user
+    ) as User;
 
-    if (game && !user) throw new Error("Пользователь не найден");
+    if (game && !currentUser) throw new Error("Пользователь не найден");
 
-    const actionsType: ActionType = getActionsType(params.user as Role, pageName);
+    const actionsType = getActionsType(params.user as Role, pageName);
 
     const { data: actions, isSuccess: isActionsLoadingSuccess } =
         useGetActionsByTypeQuery(
             {
                 type: actionsType,
-                userId: user?.userId,
+                userId: currentUser?.userId,
             },
-            { skip: !isGameLoadingSuccess && !user }
+            { skip: !isGameLoadingSuccess && !currentUser }
         );
-    
+
     return {
         params,
         game,
-        user,
+        currentUser,
         actions,
         actionsType,
         isGameLoadingSuccess,

@@ -1,16 +1,42 @@
+import {
+    UserPagesNames as names,
+    userPagesNamesWithActions,
+} from "../config/UserPagesNames";
 import { ActionType, Role } from "../interfaces/game";
 
 export const getActionsType = (
     role: Role,
-    pageName: "pl-to-pr" | "pr-to-pl"
+    pageName: (typeof userPagesNamesWithActions)[number]
 ): ActionType => {
     if (role === "player") {
-        if (pageName === "pl-to-pr") return "green";
-        if (pageName === "pr-to-pl") return "yellow";
+        if (
+            pageName === names.PLAYER_TO_PARTNER ||
+            pageName === names.PLAYER_TO_PARTNER_ESTIMATE
+        ) {
+            return "green";
+        }
+        if (
+            pageName === names.PARTNER_TO_PLAYER ||
+            pageName === names.PARTNER_TO_PLAYER_ESTIMATE
+        ) {
+            return "yellow";
+        }
+        if (pageName === names.PARTNER_TO_PLAYER_FILLED_ESTIMATE) {
+            return "blue";
+        }
+    } else if (role === "partner") {
+        if (
+            pageName === names.PLAYER_TO_PARTNER ||
+            pageName === names.PLAYER_TO_PARTNER_ESTIMATE
+        ) {
+            return "blue";
+        }
+        if (
+            pageName === names.PARTNER_TO_PLAYER ||
+            pageName === names.PARTNER_TO_PLAYER_ESTIMATE
+        ) {
+            return "gray";
+        }
     }
-    if (role === "partner") {
-        if (pageName === "pl-to-pr") return "blue";
-        if (pageName === "pr-to-pl") return "gray";
-    }
-    return "green";
+    throw new Error("Нельзя получить тип действия");
 };

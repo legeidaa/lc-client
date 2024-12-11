@@ -1,7 +1,7 @@
 import { FC } from "react";
 import styles from "./InputsList.module.scss";
 import { Input, InputTheme } from "../Input/Input";
-import { CrossIcon } from "../icons/CrossIcon";
+import { CrossIcon } from "../Icons/CrossIcon";
 import { Button } from "../Button/Button";
 import { Action, Expectation } from "@/shared/interfaces/game";
 import classNames from "classnames";

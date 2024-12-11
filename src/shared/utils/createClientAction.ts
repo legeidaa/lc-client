@@ -6,7 +6,7 @@ export const createClientAction = (
 ): ClientAction => {
     return {
         userId: user.userId,
-        cost: null,
+        estimate: null,
         title: "",
         type: actionsType,
         actionId: Date.now() + Math.random(),

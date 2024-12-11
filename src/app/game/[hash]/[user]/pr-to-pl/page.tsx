@@ -27,7 +27,7 @@ export default function Home() {
             <ActionsListController />
 
             <Link
-                href={`/game/${game?.gameHash}/player/${UserPagesNames.PLAYER_TO_PARTNER_COST}`}
+                href={`/game/${game?.gameHash}/player/${UserPagesNames.PLAYER_TO_PARTNER_ESTIMATE}`}
             >
                 Следующая страница
             </Link>

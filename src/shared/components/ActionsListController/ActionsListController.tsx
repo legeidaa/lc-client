@@ -16,7 +16,7 @@ import { saveInputsListData } from "@/shared/utils/InputsListFuncs/saveInputsLis
 import { deleteInputItem } from "@/shared/utils/InputsListFuncs/deleteInputItem";
 
 export const ActionsListController: FC = () => {
-    const { actions, actionsType, user, isActionsLoadingSuccess } =
+    const { actions, actionsType, currentUser: user, isActionsLoadingSuccess } =
         useGetActionsListData();
 
     const [updateActions, { isLoading: isUpdateActionsLoading }] =
@@ -28,31 +28,36 @@ export const ActionsListController: FC = () => {
     const [btnToDelete, setBtnToDelete] = useState<number | null>(null);
     const [clientActions, setClientActions] = useState<Array<Action>>([]);
     const [isSomeFieldsEmpty, setIsSomeFieldsEmpty] = useState(false);
-    const isFirstRender = useRef(true);
+    const isInitialized = useRef(false);
 
     useEffect(() => {
-        // если в базе менее четырех действий, подмешиваем дополнительные с пометкой, что созданы на клиенте
-        if (isActionsLoadingSuccess && actions && isFirstRender.current) {
-            function createClientActions(num: number): ClientAction[] {
-                const clientActions: ClientAction[] = new Array(num)
-                    .fill(null)
-                    .map(() => {
-                        return createClientAction(user, actionsType);
-                    });
-                return clientActions;
-            }
+        function createClientActions(num: number): ClientAction[] {
+            const clientActions: ClientAction[] = new Array(num)
+                .fill(null)
+                .map(() => {
+                    return createClientAction(user, actionsType);
+                });
+            return clientActions;
+        }
 
+        // если в базе менее четырех действий, подмешиваем дополнительные с пометкой, что созданы на клиенте
+        if (isActionsLoadingSuccess && actions && !isInitialized.current) {
             const newActions =
                 actions.length > 4
                     ? actions
                     : [...actions, ...createClientActions(4 - actions.length)];
-            isFirstRender.current = false;
+
             setClientActions(newActions);
-            // }
+            isInitialized.current = true;
         } else if (isActionsLoadingSuccess && actions) {
+            if (actions.length === 0) {
+                setClientActions([...createClientActions(4)]);
+            } else {
             setClientActions([...actions]);
+            }
         }
     }, [actions, actionsType, isActionsLoadingSuccess, user]);
+    console.log(actions, clientActions);
 
     const onInputChange = (value: string, i: number) => {
         updateInputsData(
@@ -83,14 +88,14 @@ export const ActionsListController: FC = () => {
     };
 
     const saveData = async () => {
-        saveInputsListData(
+        await saveInputsListData(
             clientActions,
             isClientAction,
             createActions,
             updateActions,
             setIsSomeFieldsEmpty,
             user
-        );
+        );        
     };
 
     if (!isActionsLoadingSuccess) {

@@ -61,16 +61,6 @@ export const gameApi = createApi({
                 body: actions,
             }),
             invalidatesTags: ["Action"],
-            // invalidatesTags: (result, error, arg) =>
-            //     result
-            //         ? [
-            //               {
-            //                   type: "Action" as const,
-            //                   id: result.actionId,
-            //               },
-            //               "Action",
-            //           ]
-            //         : ["Action"],
         }),
 
         updateActions: builder.mutation<Action[], Action[]>({
@@ -80,16 +70,6 @@ export const gameApi = createApi({
                 body: actions,
             }),
             invalidatesTags: ["Action"],
-            // invalidatesTags: (result, error, arg) =>
-            //     result
-            //         ? [
-            //               ...result.map(({ actionId }) => ({
-            //                   type: "Action" as const,
-            //                   id: actionId,
-            //               })),
-            //               "Action",
-            //           ]
-            //         : ["Action"],
         }),
 
         getActionsByUser: builder.query<Action[], number>({
@@ -117,9 +97,7 @@ export const gameApi = createApi({
                 url: `action/${actionId}`,
                 method: "DELETE",
             }),
-            invalidatesTags: (result, error, arg) => [
-                { type: "Action", id: arg },
-            ],
+            invalidatesTags: ["Action"],
         }),
 
         // expectation
@@ -160,9 +138,7 @@ export const gameApi = createApi({
                 url: `expectation/${expectationId}`,
                 method: "DELETE",
             }),
-            invalidatesTags: (result, error, arg) => [
-                { type: "Expectation", id: arg },
-            ],
+            invalidatesTags: ["Expectation"],
         }),
     }),
 });
