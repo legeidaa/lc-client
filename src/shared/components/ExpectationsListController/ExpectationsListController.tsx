@@ -14,15 +14,8 @@ import { useParams } from "next/navigation";
 import { updateInputsData } from "@/shared/utils/InputsListFuncs/updateInputItems";
 import { saveInputsListData } from "@/shared/utils/InputsListFuncs/saveInputsListData";
 import { deleteInputItem } from "@/shared/utils/InputsListFuncs/deleteInputItem";
-
-export const createClientExpectation = (user: User): ClientExpectation => {
-    return {
-        userId: user.userId,
-        title: "",
-        expectationId: Date.now() + Math.random(),
-        client: true,
-    };
-};
+import { createClientExpectations } from "@/shared/utils/createClientExpectations";
+import { createClientExpectation } from "@/shared/utils/createClientExpectation";
 
 export const isClientExpectation = (
     expectation: ClientExpectation | Expectation
@@ -51,43 +44,37 @@ export const ExpectationsListController: FC = () => {
 
     const [btnToDelete, setBtnToDelete] = useState<number | null>(null);
     const [clientExpectations, setClientExpectations] = useState<
-        Array<Expectation>
+        ClientExpectation[]
     >([]);
     const [isSomeFieldsEmpty, setIsSomeFieldsEmpty] = useState(false);
-    const isFirstRender = useRef(true);
+    const isInitialized = useRef(false);
 
     useEffect(() => {
         // если в базе менее четырех действий, подмешиваем дополнительные с пометкой, что созданы на клиенте
         if (
             isExpectationsLoadingSuccess &&
             expectations &&
-            isFirstRender.current
+            !isInitialized.current
         ) {
-            function createClientExpectations(
-                num: number
-            ): ClientExpectation[] {
-                const clientExpectations: ClientExpectation[] = new Array(num)
-                    .fill(null)
-                    .map(() => {
-                        return createClientExpectation(user);
-                    });
-                return clientExpectations;
-            }
-
-            const newActions =
+            const newActions: ClientExpectation[] =
                 expectations.length > 4
-                    ? expectations
+                    ? expectations as ClientExpectation[]
                     : [
-                          ...expectations,
-                          ...createClientExpectations(4 - expectations.length),
+                          ...expectations as ClientExpectation[],
+                          ...createClientExpectations(4 - expectations.length, user),
                       ];
-            isFirstRender.current = false;
             setClientExpectations(newActions);
-            // }
+            isInitialized.current = true;
         } else if (isExpectationsLoadingSuccess && expectations) {
-            setClientExpectations([...expectations]);
+            if (expectations.length === 0) {
+                setClientExpectations([...createClientExpectations(4, user)]);
+            } else {
+                setClientExpectations([...expectations as ClientExpectation[]]);
+            }
         }
+        // }
     }, [expectations, isExpectationsLoadingSuccess, user]);
+    console.log(expectations, clientExpectations);
 
     const onInputChange = (value: string, i: number) => {
         updateInputsData(

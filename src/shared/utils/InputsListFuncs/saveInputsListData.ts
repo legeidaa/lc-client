@@ -68,5 +68,7 @@ export const saveInputsListData = async <T extends Action | Expectation>(
         queries.push(updateFunction(itemsToUpdate));
     }
     
-    await Promise.all(queries);
+    await Promise.all(queries)
+
+    setIsSomeFieldsEmpty(false);
 };

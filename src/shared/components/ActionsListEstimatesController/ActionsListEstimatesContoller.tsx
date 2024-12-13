@@ -4,6 +4,7 @@ import { useGetActionsListData } from "@/shared/hooks/useGetActionsListData";
 import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
 import { InputsListEstimates } from "../InputsListEstimates/InputsListEstimates";
 import { Action } from "@/shared/interfaces/game";
+import styles from "./ActionsListEstimatesContoller.module.scss";
 
 export const ActionsListEstimatesContoller: FC = () => {
     const { actions, isActionsLoadingSuccess } = useGetActionsListData();
@@ -12,11 +13,11 @@ export const ActionsListEstimatesContoller: FC = () => {
         useUpdateActionsMutation();
 
     const [isSomeFieldsEmpty, setIsSomeFieldsEmpty] = useState(false);
-    const [localActions, setLoacalActions] = useState<Action[]>([]);
+    const [localActions, setLocalActions] = useState<Action[]>([]);
 
     useEffect(() => {
         if (isActionsLoadingSuccess && actions) {
-            setLoacalActions(actions);
+            setLocalActions(actions);
         }
     }, [actions, isActionsLoadingSuccess]);
 
@@ -27,33 +28,35 @@ export const ActionsListEstimatesContoller: FC = () => {
         const trimmedValue = value.replace(/^0+(?!$)/, "");
         const numberValue = parseInt(trimmedValue);
 
-        if (isNaN(numberValue)) {            
-            correctedValue = ''; 
+        if (isNaN(numberValue)) {
+            correctedValue = "";
         } else if (numberValue > 100) {
-            correctedValue = "100"; 
+            correctedValue = "100";
         } else if (numberValue < 0) {
             correctedValue = "0";
         } else {
-            correctedValue = trimmedValue; 
+            correctedValue = trimmedValue;
         }
 
         const newItems = [...localActions];
         if (newItems[i]) {
             const newItem = { ...newItems[i] };
             newItem.estimate = Number(correctedValue);
-            newItems[i] = newItem;            
-            setLoacalActions(newItems);
+            newItems[i] = newItem;
+            setLocalActions(newItems);
         }
-        const isSomeFieldsEmpty = newItems.some((item) => item.estimate === null);
+        const isSomeFieldsEmpty = newItems.some(
+            (item) => item.estimate === null
+        );
         if (!isSomeFieldsEmpty) {
             setIsSomeFieldsEmpty(false);
         }
     };
 
     const saveData = async () => {
-
-        
-        const isSomeFieldsEmpty = localActions.some((item) => item.estimate === null);
+        const isSomeFieldsEmpty = localActions.some(
+            (item) => item.estimate === null
+        );
 
         console.log(localActions, isSomeFieldsEmpty);
         if (isSomeFieldsEmpty) {
@@ -68,13 +71,18 @@ export const ActionsListEstimatesContoller: FC = () => {
     }
 
     return (
-        <InputsListEstimates
-            actions={localActions}
-            isReadyBtnDisabled={isUpdateActionsLoading}
-            placeholder="0"
-            onInputChange={onInputChange}
-            onReadyClick={saveData}
-            isSomeFieldsEmpty={isSomeFieldsEmpty}
-        />
+        <>
+            <div className={styles.max}>
+                Максимальная стоимость одного действия – 100 любкоинов
+            </div>
+            <InputsListEstimates
+                actions={localActions}
+                isReadyBtnDisabled={isUpdateActionsLoading}
+                placeholder="0"
+                onInputChange={onInputChange}
+                onReadyClick={saveData}
+                isSomeFieldsEmpty={isSomeFieldsEmpty}
+            />
+        </>
     );
 };

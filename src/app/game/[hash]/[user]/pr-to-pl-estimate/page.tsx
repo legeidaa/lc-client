@@ -15,19 +15,15 @@ export default function PlToPrEstimate() {
         <div className="container">
             <PageDescription textAlign="left">
                 <p>
-                    <b>А сейчас начинаем наши рациональные подсчеты</b>
-                </p>
-                <p>
-                    Оцените, сколько стоит каждое ваше действие на языке любви в
-                    любкоинах. Сколько сил, времени, желания и любви вы
-                    вкладываете в каждое из них.
+                    А теперь оцените, сколько сил, времени, желания и любви на
+                    ваш взгляд, ваш партнер вкладывает в каждое из этих действий
                 </p>
             </PageDescription>
 
             <ActionsListEstimatesContoller />
 
             <Link
-                href={`/game/${game?.gameHash}/player/${UserPagesNames.PARTNER_TO_PLAYER_ESTIMATE}`}
+                href={`/game/${game?.gameHash}/player/${UserPagesNames.EXPECTATIONS}`}
             >
                 Следующая страница
             </Link>

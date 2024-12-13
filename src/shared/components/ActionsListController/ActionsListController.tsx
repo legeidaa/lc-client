@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef, useState } from "react";
-import { Action, ClientAction } from "@/shared/interfaces/game";
+import { Action } from "@/shared/interfaces/game";
 import {
     useCreateActionsMutation,
     useDeleteActionMutation,
@@ -14,10 +14,15 @@ import { InputTheme } from "../Input/Input";
 import { updateInputsData } from "@/shared/utils/InputsListFuncs/updateInputItems";
 import { saveInputsListData } from "@/shared/utils/InputsListFuncs/saveInputsListData";
 import { deleteInputItem } from "@/shared/utils/InputsListFuncs/deleteInputItem";
+import { createClientActions } from "@/shared/utils/createClientActions";
 
 export const ActionsListController: FC = () => {
-    const { actions, actionsType, currentUser: user, isActionsLoadingSuccess } =
-        useGetActionsListData();
+    const {
+        actions,
+        actionsType,
+        currentUser: user,
+        isActionsLoadingSuccess,
+    } = useGetActionsListData();
 
     const [updateActions, { isLoading: isUpdateActionsLoading }] =
         useUpdateActionsMutation();
@@ -26,38 +31,40 @@ export const ActionsListController: FC = () => {
     const [deleteAction] = useDeleteActionMutation();
 
     const [btnToDelete, setBtnToDelete] = useState<number | null>(null);
-    const [clientActions, setClientActions] = useState<Array<Action>>([]);
+    const [clientActions, setClientActions] = useState<Action[]>([]);
     const [isSomeFieldsEmpty, setIsSomeFieldsEmpty] = useState(false);
     const isInitialized = useRef(false);
 
     useEffect(() => {
-        function createClientActions(num: number): ClientAction[] {
-            const clientActions: ClientAction[] = new Array(num)
-                .fill(null)
-                .map(() => {
-                    return createClientAction(user, actionsType);
-                });
-            return clientActions;
-        }
-
-        // если в базе менее четырех действий, подмешиваем дополнительные с пометкой, что созданы на клиенте
+        // самый первый рендер при открытии страницы
         if (isActionsLoadingSuccess && actions && !isInitialized.current) {
+            // если в базе менее четырех действий, подмешиваем дополнительные с пометкой, что созданы на клиенте
             const newActions =
                 actions.length > 4
                     ? actions
-                    : [...actions, ...createClientActions(4 - actions.length)];
+                    : [
+                          ...actions,
+                          ...createClientActions(
+                              4 - actions.length,
+                              user,
+                              actionsType
+                          ),
+                      ];
 
             setClientActions(newActions);
             isInitialized.current = true;
+
+            //если обновились actions загрузились заново при удалении или обновлении
         } else if (isActionsLoadingSuccess && actions) {
             if (actions.length === 0) {
-                setClientActions([...createClientActions(4)]);
+                setClientActions([
+                    ...createClientActions(4, user, actionsType),
+                ]);
             } else {
-            setClientActions([...actions]);
+                setClientActions([...actions]);
             }
         }
     }, [actions, actionsType, isActionsLoadingSuccess, user]);
-    console.log(actions, clientActions);
 
     const onInputChange = (value: string, i: number) => {
         updateInputsData(
@@ -95,7 +102,7 @@ export const ActionsListController: FC = () => {
             updateActions,
             setIsSomeFieldsEmpty,
             user
-        );        
+        );
     };
 
     if (!isActionsLoadingSuccess) {

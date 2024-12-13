@@ -10,7 +10,6 @@ export const createClientAction = (
         title: "",
         type: actionsType,
         actionId: Date.now() + Math.random(),
-        // помечаем, что это созданный на клиенте action
         client: true,
     };
 };
