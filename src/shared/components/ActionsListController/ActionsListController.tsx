@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef, useState } from "react";
-import { Action } from "@/shared/interfaces/game";
+import { Action, ClientAction } from "@/shared/interfaces/game";
 import {
     useCreateActionsMutation,
     useDeleteActionMutation,
@@ -24,19 +24,26 @@ export const ActionsListController: FC = () => {
         isActionsLoadingSuccess,
     } = useGetActionsListData();
 
-    const [updateActions, { isLoading: isUpdateActionsLoading }] =
-        useUpdateActionsMutation();
-    const [createActions, { isLoading: isCreateActionsLoading }] =
-        useCreateActionsMutation();
-    const [deleteAction] = useDeleteActionMutation();
+    const [
+        updateActions,
+        { isLoading: isUpdateActionsLoading, isError: isUpdateActionsError },
+    ] = useUpdateActionsMutation();
+    const [
+        createActions,
+        { isLoading: isCreateActionsLoading, isError: isCreateActionsError },
+    ] = useCreateActionsMutation();
+    const [deleteAction, { isError: isDeleteActionError }] =
+        useDeleteActionMutation();
 
     const [btnToDelete, setBtnToDelete] = useState<number | null>(null);
-    const [clientActions, setClientActions] = useState<Action[]>([]);
+    const [clientActions, setClientActions] = useState<
+        (ClientAction | Action)[]
+    >([]);
     const [isSomeFieldsEmpty, setIsSomeFieldsEmpty] = useState(false);
     const isInitialized = useRef(false);
+    const isUpdated = useRef(false);
 
     useEffect(() => {
-        // самый первый рендер при открытии страницы
         if (isActionsLoadingSuccess && actions && !isInitialized.current) {
             // если в базе менее четырех действий, подмешиваем дополнительные с пометкой, что созданы на клиенте
             const newActions =
@@ -53,18 +60,24 @@ export const ActionsListController: FC = () => {
 
             setClientActions(newActions);
             isInitialized.current = true;
-
-            //если обновились actions загрузились заново при удалении или обновлении
-        } else if (isActionsLoadingSuccess && actions) {
-            if (actions.length === 0) {
-                setClientActions([
-                    ...createClientActions(4, user, actionsType),
-                ]);
-            } else {
-                setClientActions([...actions]);
-            }
+        } else if (isActionsLoadingSuccess && actions && isUpdated.current) {
+            setClientActions([...actions]);
+            isUpdated.current = false;
+        } else if (isActionsLoadingSuccess && actions && btnToDelete !== null) {
+            setClientActions(
+                clientActions.filter((item) => item.actionId !== btnToDelete)
+            );
+            setBtnToDelete(null);
         }
-    }, [actions, actionsType, isActionsLoadingSuccess, user]);
+    }, [
+        actions,
+        actionsType,
+        isActionsLoadingSuccess,
+        user,
+        btnToDelete,
+        setBtnToDelete,
+        clientActions,
+    ]);
 
     const onInputChange = (value: string, i: number) => {
         updateInputsData(
@@ -88,7 +101,6 @@ export const ActionsListController: FC = () => {
             actionId,
             clientActions,
             isClientAction,
-            setClientActions,
             setBtnToDelete,
             deleteAction
         );
@@ -101,7 +113,8 @@ export const ActionsListController: FC = () => {
             createActions,
             updateActions,
             setIsSomeFieldsEmpty,
-            user
+            user,
+            isUpdated
         );
     };
 
@@ -123,6 +136,11 @@ export const ActionsListController: FC = () => {
             onAddClick={onAddClick}
             onReadyClick={saveData}
             isSomeFieldsEmpty={isSomeFieldsEmpty}
+            isError={
+                isUpdateActionsError ||
+                isCreateActionsError ||
+                isDeleteActionError
+            }
         />
     );
 };

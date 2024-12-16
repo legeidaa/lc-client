@@ -58,7 +58,6 @@ export const ActionsListEstimatesContoller: FC = () => {
             (item) => item.estimate === null
         );
 
-        console.log(localActions, isSomeFieldsEmpty);
         if (isSomeFieldsEmpty) {
             setIsSomeFieldsEmpty(true);
             return;

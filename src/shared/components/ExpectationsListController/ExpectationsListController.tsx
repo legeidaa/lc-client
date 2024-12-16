@@ -44,37 +44,48 @@ export const ExpectationsListController: FC = () => {
 
     const [btnToDelete, setBtnToDelete] = useState<number | null>(null);
     const [clientExpectations, setClientExpectations] = useState<
-        ClientExpectation[]
+        (ClientExpectation | Expectation)[]
     >([]);
     const [isSomeFieldsEmpty, setIsSomeFieldsEmpty] = useState(false);
     const isInitialized = useRef(false);
+    const isUpdated = useRef(false);
 
     useEffect(() => {
-        // если в базе менее четырех действий, подмешиваем дополнительные с пометкой, что созданы на клиенте
         if (
             isExpectationsLoadingSuccess &&
             expectations &&
             !isInitialized.current
         ) {
-            const newActions: ClientExpectation[] =
+            const newActions: (ClientExpectation | Expectation)[] =
                 expectations.length > 4
-                    ? expectations as ClientExpectation[]
+                    ? expectations
                     : [
-                          ...expectations as ClientExpectation[],
-                          ...createClientExpectations(4 - expectations.length, user),
+                          ...expectations,
+                          ...createClientExpectations(
+                              4 - expectations.length,
+                              user
+                          ),
                       ];
             setClientExpectations(newActions);
             isInitialized.current = true;
-        } else if (isExpectationsLoadingSuccess && expectations) {
-            if (expectations.length === 0) {
-                setClientExpectations([...createClientExpectations(4, user)]);
-            } else {
-                setClientExpectations([...expectations as ClientExpectation[]]);
-            }
+        } else if (
+            isExpectationsLoadingSuccess &&
+            expectations &&
+            isUpdated.current
+        ) {
+            setClientExpectations([...expectations]);
+            isUpdated.current = false;
+        } else if (
+            isExpectationsLoadingSuccess &&
+            expectations &&
+            btnToDelete !== null
+        ) {
+            setClientExpectations(
+                clientExpectations.filter((item) => item.expectationId !== btnToDelete)
+            );
+            setBtnToDelete(null);
         }
-        // }
-    }, [expectations, isExpectationsLoadingSuccess, user]);
-    console.log(expectations, clientExpectations);
+    }, [btnToDelete, clientExpectations, expectations, isExpectationsLoadingSuccess, user]);
 
     const onInputChange = (value: string, i: number) => {
         updateInputsData(
@@ -98,7 +109,6 @@ export const ExpectationsListController: FC = () => {
             expectationId,
             clientExpectations,
             isClientExpectation,
-            setClientExpectations,
             setBtnToDelete,
             deleteExpectation
         );
@@ -111,7 +121,8 @@ export const ExpectationsListController: FC = () => {
             createExpectations,
             updateExpectations,
             setIsSomeFieldsEmpty,
-            user
+            user,
+            isUpdated
         );
     };
 

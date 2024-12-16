@@ -17,7 +17,8 @@ interface InputsListProps {
     onRowDelete: (actionId: number) => void;
     onAddClick: () => void;
     onReadyClick: () => Promise<void>;
-    className?: string
+    className?: string;
+    isError?: boolean
 }
 
 export const InputsList: FC<InputsListProps> = (props) => {
@@ -32,28 +33,43 @@ export const InputsList: FC<InputsListProps> = (props) => {
         onAddClick,
         onReadyClick,
         firstInputTheme,
-        className
+        className,
+        isError
     } = props;
-    
+
     return (
         <>
-            <ul className={classNames(styles.list, className && styles[className])}>
+            <ul
+                className={classNames(
+                    styles.list,
+                    className && styles[className]
+                )}
+            >
                 {actions.map((action, i) => {
                     let id: number = 0;
-                    if ('actionId' in action) {
+                    if ("actionId" in action) {
                         id = action.actionId;
-                    } else if ('expectationId' in action) {
+                    } else if ("expectationId" in action) {
                         id = action.expectationId;
                     }
                     return (
-                        <li key={id} className={classNames(styles.listItem, {[styles[firstInputTheme] as string]: i === 0})}>
+                        <li
+                            key={id}
+                            className={classNames(styles.listItem, {
+                                [styles[firstInputTheme] as string]: i === 0,
+                            })}
+                        >
                             <Input
                                 theme={
-                                    i === 0 ? firstInputTheme : InputTheme.ACTION
+                                    i === 0
+                                        ? firstInputTheme
+                                        : InputTheme.ACTION
                                 }
                                 value={action.title}
                                 placeholder={placeholder}
-                                onChange={(e) => onInputChange(e.target.value, i)}
+                                onChange={(e) =>
+                                    onInputChange(e.target.value, i)
+                                }
                                 isDeleteBtnDisabled={btnToDelete === id}
                                 onDelete={
                                     actions.length > 1
@@ -67,7 +83,7 @@ export const InputsList: FC<InputsListProps> = (props) => {
                                 </div>
                             )}
                         </li>
-                    )
+                    );
                 })}
             </ul>
 
@@ -84,6 +100,8 @@ export const InputsList: FC<InputsListProps> = (props) => {
                     Готово
                 </Button>
             </div>
+
+            {isError && <div>Произошла ошибка</div>}
         </>
     );
 };

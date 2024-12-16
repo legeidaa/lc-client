@@ -7,7 +7,7 @@ import {
     ExpectationToCreate,
     User,
 } from "@/shared/interfaces/game";
-import { SetStateAction } from "react";
+import { MutableRefObject, SetStateAction } from "react";
 
 export const saveInputsListData = async <T extends Action | Expectation>(
     clientItems: T[],
@@ -19,7 +19,8 @@ export const saveInputsListData = async <T extends Action | Expectation>(
     ) => Promise<unknown>,
     updateFunction: (items: T[]) => Promise<unknown>,
     setIsSomeFieldsEmpty: (value: SetStateAction<boolean>) => void,
-    user: User
+    user: User,
+    isUpdated: MutableRefObject<boolean>
 ) => {
     const isSomeFieldsEmpty = clientItems.some(
         (item) => !("title" in item && item.title)
@@ -30,7 +31,7 @@ export const saveInputsListData = async <T extends Action | Expectation>(
     }
 
     const itemsToUpdate: T[] = [];
-    
+
     const actionsToCreate: CreateActionsRequest = [];
     const expectationsToCreate: CreateExpectationRequest = [];
 
@@ -67,8 +68,13 @@ export const saveInputsListData = async <T extends Action | Expectation>(
     if (itemsToUpdate.length > 0) {
         queries.push(updateFunction(itemsToUpdate));
     }
-    
-    await Promise.all(queries)
 
-    setIsSomeFieldsEmpty(false);
+    Promise.all(queries)
+        .then(() => {
+            setIsSomeFieldsEmpty(false);
+            isUpdated.current = true;
+        })
+        .catch((e) => {
+            throw new Error(e);
+        });
 };
