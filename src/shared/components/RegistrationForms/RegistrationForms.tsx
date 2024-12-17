@@ -16,7 +16,7 @@ import {
     useCreatePairMutation,
     useGetGameQuery,
     useLazyGetUsersQuery,
-} from "@/lib/redux/gameApi";
+} from "@/shared/api";
 import { useRouter, useParams } from "next/navigation";
 import { CreateUserRequest, Sex, User } from "@/shared/interfaces/game";
 import { UserPagesNames } from "@/shared/config/UserPagesNames";

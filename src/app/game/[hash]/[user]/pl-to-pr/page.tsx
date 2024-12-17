@@ -4,7 +4,7 @@ import { PageDescription } from "@/shared/components/PageDescription/PageDescrip
 import styles from "./page.module.scss";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useGetGameQuery } from "@/lib/redux/gameApi";
+import { useGetGameQuery } from "@/shared/api";
 import { UserPagesNames } from "@/shared/config/UserPagesNames";
 import { ActionsListController } from "@/shared/components/ActionsListController/ActionsListController";
 

@@ -6,7 +6,7 @@ import { Button, ButtonSize } from "@/shared/components/Button/Button";
 import {
     useGetGameQuery,
     useUpdateUserResourcesMutation,
-} from "@/lib/redux/gameApi";
+} from "@/shared/api";
 import { useParams } from "next/navigation";
 import { User } from "@/shared/interfaces/game";
 import { useRouter } from "next/navigation";

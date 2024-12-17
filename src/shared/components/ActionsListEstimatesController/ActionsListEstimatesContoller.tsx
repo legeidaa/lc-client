@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, useEffect, useState } from "react";
-import { useUpdateActionsMutation } from "@/lib/redux/gameApi";
+import { useUpdateActionsMutation } from "@/shared/api";
 import { useGetActionsListData } from "@/shared/hooks/useGetActionsListData";
 import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
 import { InputsListEstimates } from "../InputsListEstimates/InputsListEstimates";

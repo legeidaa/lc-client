@@ -1,4 +1,4 @@
-import { useGetActionsByTypeQuery, useGetGameQuery } from "@/lib/redux/gameApi";
+import { useGetActionsByTypeQuery, useGetGameQuery } from "@/shared/api";
 import { Role, User } from "../interfaces/game";
 import { useParams, usePathname } from "next/navigation";
 import { getActionsType } from "../utils/getActionsType";

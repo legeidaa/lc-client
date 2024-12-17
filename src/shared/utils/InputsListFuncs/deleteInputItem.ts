@@ -1,7 +1,7 @@
 import {
     useDeleteActionMutation,
     useDeleteExpectationMutation,
-} from "@/lib/redux/gameApi";
+} from "@/shared/api";
 import { Action, Expectation } from "@/shared/interfaces/game";
 import { SetStateAction } from "react";
 

@@ -1,5 +1,5 @@
 "use client";
-import { useCreateGameMutation } from "@/lib/redux/gameApi";
+import { useCreateGameMutation } from "@/shared/api";
 import { Button } from "@/shared/components/Button/Button";
 import { StartInfo } from "@/shared/components/StartInfo/StartInfo";
 import { useRouter } from "next/navigation";

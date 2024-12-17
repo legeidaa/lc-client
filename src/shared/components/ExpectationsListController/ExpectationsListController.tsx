@@ -6,7 +6,7 @@ import {
     useGetExpectationsQuery,
     useGetGameQuery,
     useUpdateExpectationsMutation,
-} from "@/lib/redux/gameApi";
+} from "@/shared/api";
 import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
 import { InputsList } from "../InputsList/InputsList";
 import { InputTheme } from "../Input/Input";
@@ -81,11 +81,19 @@ export const ExpectationsListController: FC = () => {
             btnToDelete !== null
         ) {
             setClientExpectations(
-                clientExpectations.filter((item) => item.expectationId !== btnToDelete)
+                clientExpectations.filter(
+                    (item) => item.expectationId !== btnToDelete
+                )
             );
             setBtnToDelete(null);
         }
-    }, [btnToDelete, clientExpectations, expectations, isExpectationsLoadingSuccess, user]);
+    }, [
+        btnToDelete,
+        clientExpectations,
+        expectations,
+        isExpectationsLoadingSuccess,
+        user,
+    ]);
 
     const onInputChange = (value: string, i: number) => {
         updateInputsData(

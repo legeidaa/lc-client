@@ -1,9 +1,9 @@
+import { emptyGameApi } from "@/shared/api/rtk/emptyGameApi";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { gameApi } from "./gameApi";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
 export const rootReducer = combineReducers({
-    [gameApi.reducerPath]: gameApi.reducer,
+    [emptyGameApi.reducerPath]: emptyGameApi.reducer,
 });
 
 export const makeStore = () => {
@@ -11,7 +11,7 @@ export const makeStore = () => {
         reducer: rootReducer,
         devTools: true,
         middleware: (getDefaultMiddleware) =>
-            getDefaultMiddleware().concat(gameApi.middleware),
+            getDefaultMiddleware().concat(emptyGameApi.middleware),
     });
 };
 const store = makeStore();

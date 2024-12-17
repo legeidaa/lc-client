@@ -4,7 +4,7 @@ import {
     useCreateActionsMutation,
     useDeleteActionMutation,
     useUpdateActionsMutation,
-} from "@/lib/redux/gameApi";
+} from "@/shared/api";
 import { createClientAction } from "@/shared/utils/createClientAction";
 import { isClientAction } from "@/shared/utils/isClientAction";
 import { useGetActionsListData } from "@/shared/hooks/useGetActionsListData";
