@@ -13,6 +13,7 @@ const userApi = emptyGameApi.injectEndpoints({
                 method: "POST",
                 body: user,
             }),
+            invalidatesTags: ["User"],
         }),
 
         updateUserResources: builder.mutation<User, UpdateResourcesRequest>({
