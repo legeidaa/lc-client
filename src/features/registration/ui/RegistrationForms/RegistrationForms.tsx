@@ -104,7 +104,6 @@ export default function RegistrationForms() {
         },
         [createPair, gameHash, gameId, regFormData, router, users]
     );
-    console.log("rerender");
 
     const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;

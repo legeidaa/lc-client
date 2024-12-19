@@ -11,7 +11,7 @@ export default function Layout({
     return (
         <StoreProvider>
             <header className={styles.header}>
-                <Image width={570} src={Logo} alt="Логотип" />
+                <Image width={570} height={189} src={Logo} alt="Логотип" priority/>
             </header>
             <main>{children}</main>
         </StoreProvider>
