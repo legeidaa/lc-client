@@ -3,15 +3,12 @@
 import { PageDescription } from "@/shared/components/PageDescription/PageDescription";
 import styles from "./page.module.scss";
 import { Button, ButtonSize } from "@/shared/components/Button/Button";
-import {
-    useGetGameQuery,
-    useUpdateUserResourcesMutation,
-} from "@/shared/api";
 import { useParams } from "next/navigation";
-import { User } from "@/shared/interfaces/game";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { UserPagesNames } from "@/shared/config/UserPagesNames";
+import { useGetGameQuery } from "@/entities/game";
+import { User, useUpdateUserResourcesMutation } from "@/entities/user";
 
 export default function Resources() {
     const params = useParams<{ hash: string; user: string }>();

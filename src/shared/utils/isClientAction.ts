@@ -1,5 +1,4 @@
-import { Action } from "@reduxjs/toolkit";
-import { ClientAction } from "../interfaces/game";
+import { Action, ClientAction } from "@/entities/action";
 
 export const isClientAction = (
     action: ClientAction | Action

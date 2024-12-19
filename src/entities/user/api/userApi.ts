@@ -1,9 +1,6 @@
-import {
-    CreateUserRequest,
-    UpdateResourcesRequest,
-    User,
-} from "@/shared/interfaces/game";
-import { emptyGameApi } from "./emptyGameApi";
+import { emptyGameApi } from "@/shared/api";
+import { CreateUserRequest, UpdateResourcesRequest, User } from "../types/types";
+
 
 const userApi = emptyGameApi.injectEndpoints({
     endpoints: (builder) => ({

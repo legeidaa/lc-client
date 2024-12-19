@@ -1,12 +1,4 @@
 import { FC, useEffect, useRef, useState } from "react";
-import { ClientExpectation, Expectation, User } from "@/shared/interfaces/game";
-import {
-    useCreateExpectationsMutation,
-    useDeleteExpectationMutation,
-    useGetExpectationsQuery,
-    useGetGameQuery,
-    useUpdateExpectationsMutation,
-} from "@/shared/api";
 import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
 import { InputsList } from "../InputsList/InputsList";
 import { InputTheme } from "../Input/Input";
@@ -16,6 +8,9 @@ import { saveInputsListData } from "@/shared/utils/InputsListFuncs/saveInputsLis
 import { deleteInputItem } from "@/shared/utils/InputsListFuncs/deleteInputItem";
 import { createClientExpectations } from "@/shared/utils/createClientExpectations";
 import { createClientExpectation } from "@/shared/utils/createClientExpectation";
+import { ClientExpectation, Expectation, useCreateExpectationsMutation, useDeleteExpectationMutation, useGetExpectationsQuery, useUpdateExpectationsMutation } from "@/entities/expectation";
+import { useGetGameQuery } from "@/entities/game";
+import { User } from "@/entities/user";
 
 export const isClientExpectation = (
     expectation: ClientExpectation | Expectation

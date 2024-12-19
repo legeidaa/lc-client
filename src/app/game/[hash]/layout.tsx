@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetGameQuery } from "@/shared/api";
+import { useGetGameQuery } from "@/entities/game";
 import { LoadingSpinner } from "@/shared/components/LoadingSpinner/LoadingSpinner";
 import { notFound } from "next/navigation";
 interface LayoutProps {

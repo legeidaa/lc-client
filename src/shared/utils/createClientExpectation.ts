@@ -1,4 +1,5 @@
-import { ClientExpectation, User } from "../interfaces/game";
+import { ClientExpectation } from "@/entities/expectation";
+import { User } from "@/entities/user";
 
 export const createClientExpectation = (user: User): ClientExpectation => {
     return {

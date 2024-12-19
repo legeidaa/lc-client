@@ -3,8 +3,9 @@ import styles from "./InputsList.module.scss";
 import { Input, InputTheme } from "../Input/Input";
 import { CrossIcon } from "../Icons/CrossIcon";
 import { Button } from "../Button/Button";
-import { Action, Expectation } from "@/shared/interfaces/game";
 import classNames from "classnames";
+import { Expectation } from "@/entities/expectation";
+import { Action } from "@/entities/action";
 
 interface InputsListProps {
     actions: Action[] | Expectation[];

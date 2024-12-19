@@ -1,4 +1,5 @@
-import { Action, Expectation } from "@/shared/interfaces/game";
+import { Action } from "@/entities/action";
+import { Expectation } from "@/entities/expectation";
 import { SetStateAction } from "react";
 
 export const updateInputsData = <T extends Action | Expectation>(

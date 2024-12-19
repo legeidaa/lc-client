@@ -1,10 +1,11 @@
 import { FC, useEffect, useRef, useState } from "react";
-import { Action, ClientAction } from "@/shared/interfaces/game";
 import {
+    Action,
+    ClientAction,
     useCreateActionsMutation,
     useDeleteActionMutation,
     useUpdateActionsMutation,
-} from "@/shared/api";
+} from "@/entities/action";
 import { createClientAction } from "@/shared/utils/createClientAction";
 import { isClientAction } from "@/shared/utils/isClientAction";
 import { useGetActionsListData } from "@/shared/hooks/useGetActionsListData";

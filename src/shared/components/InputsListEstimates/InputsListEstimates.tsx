@@ -2,8 +2,8 @@ import { ChangeEvent, FC } from "react";
 import styles from "./InputsListEstimates.module.scss";
 import { Input, InputTheme } from "../Input/Input";
 import { Button } from "../Button/Button";
-import { Action } from "@/shared/interfaces/game";
 import classNames from "classnames";
+import { Action } from "@/entities/action";
 
 interface InputsListEstimatesProps {
     actions: Action[];

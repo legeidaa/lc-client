@@ -1,12 +1,7 @@
-import {
-    Action,
-    ActionToCreate,
-    CreateActionsRequest,
-    CreateExpectationRequest,
-    Expectation,
-    ExpectationToCreate,
-    User,
-} from "@/shared/interfaces/game";
+
+import { Action, ActionToCreate, CreateActionsRequest } from "@/entities/action";
+import { CreateExpectationRequest, Expectation, ExpectationToCreate } from "@/entities/expectation";
+import { User } from "@/entities/user";
 import { MutableRefObject, SetStateAction } from "react";
 
 export const saveInputsListData = async <T extends Action | Expectation>(

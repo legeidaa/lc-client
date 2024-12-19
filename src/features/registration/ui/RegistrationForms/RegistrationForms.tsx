@@ -9,13 +9,13 @@ import {
     useState,
 } from "react";
 import styles from "./RegistrationForms.module.scss";
-import { useCreatePairMutation, useGetGameQuery } from "@/shared/api";
 import { useRouter, useParams } from "next/navigation";
-import { CreateUserRequest, Sex } from "@/shared/interfaces/game";
 import { UserPagesNames } from "@/shared/config/UserPagesNames";
 import { RegFormData } from "../../model/types";
 import { Button } from "@/shared/components/Button/Button"
 import { PlayerForm } from "../PlayerForm/PlayerForm";
+import { useGetGameQuery } from "@/entities/game";
+import { CreateUserRequest, Sex, useCreatePairMutation } from "@/entities/user";
 
 export default function RegistrationForms() {
     const params = useParams<{ hash: string }>();

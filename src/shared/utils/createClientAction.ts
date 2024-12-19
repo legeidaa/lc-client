@@ -1,4 +1,5 @@
-import { ActionType, ClientAction, User } from "../interfaces/game";
+import { ActionType, ClientAction } from "@/entities/action";
+import { User } from "@/entities/user";
 
 export const createClientAction = (
     user: User,

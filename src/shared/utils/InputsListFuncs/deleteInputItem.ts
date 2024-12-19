@@ -1,8 +1,6 @@
-import {
-    useDeleteActionMutation,
-    useDeleteExpectationMutation,
-} from "@/shared/api";
-import { Action, Expectation } from "@/shared/interfaces/game";
+
+import { Action, useDeleteActionMutation } from "@/entities/action";
+import { Expectation, useDeleteExpectationMutation } from "@/entities/expectation";
 import { SetStateAction } from "react";
 
 type DeleteFunctionType<T> = T extends Action

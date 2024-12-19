@@ -1,9 +1,9 @@
 import { Input, InputTheme } from "@/shared/components/Input/Input";
 import { SexRadioInput } from "@/shared/components/SexRadioInput/SexRadioInput";
-import { Role } from "@/shared/interfaces/game";
 import styles from "./PlayerForm.module.scss";
 import { ChangeEvent, FC } from "react";
 import { RegFormData } from "../../model/types";
+import { Role } from "@/entities/user";
 
 interface PlayerFormProps {
     role: Role;

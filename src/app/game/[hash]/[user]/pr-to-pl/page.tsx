@@ -3,9 +3,9 @@
 import { PageDescription } from "@/shared/components/PageDescription/PageDescription";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useGetGameQuery } from "@/shared/api";
 import { UserPagesNames } from "@/shared/config/UserPagesNames";
 import { ActionsListController } from "@/shared/components/ActionsListController/ActionsListController";
+import { useGetGameQuery } from "@/entities/game";
 
 export default function Home() {
     const params = useParams<{ hash: string; user: string }>();

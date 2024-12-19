@@ -1,5 +1,6 @@
-import { Action, CreateActionsRequest } from "@/shared/interfaces/game";
-import { emptyGameApi } from "./emptyGameApi";
+
+import { emptyGameApi } from "@/shared/api";
+import { Action, CreateActionsRequest } from "../types/types";
 
 const actionApi = emptyGameApi.injectEndpoints({
     endpoints: (builder) => ({

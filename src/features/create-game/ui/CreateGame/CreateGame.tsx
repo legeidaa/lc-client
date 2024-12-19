@@ -1,5 +1,4 @@
 "use client";
-import { useCreateGameMutation } from "@/shared/api";
 import { LoadingSpinner } from "@/shared/components/LoadingSpinner/LoadingSpinner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -7,6 +6,7 @@ import styles from "./CreateGame.module.scss";
 import { Button } from "@/shared/components/Button/Button";
 import Image from "next/image";
 import ArrowImage from "@/img/arrow.svg";
+import { useCreateGameMutation } from "@/entities/game";
 
 export const CreateGame = () => {
     const [createGameMutation] = useCreateGameMutation();
@@ -76,7 +76,11 @@ export const CreateGame = () => {
                     </li>
                 </ul>
             </div>
-            <Button className={styles.payBtn} type="button" onClick={handleCreateGame}>
+            <Button
+                className={styles.payBtn}
+                type="button"
+                onClick={handleCreateGame}
+            >
                 ОПЛАТИТЬ
             </Button>
         </>
