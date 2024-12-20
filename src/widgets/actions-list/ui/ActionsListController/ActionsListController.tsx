@@ -6,16 +6,14 @@ import {
     useDeleteActionMutation,
     useUpdateActionsMutation,
 } from "@/entities/action";
-import { createClientAction } from "@/shared/utils/createClientAction";
-import { isClientAction } from "@/shared/utils/isClientAction";
-import { useGetActionsListData } from "@/shared/hooks/useGetActionsListData";
-import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
-import { InputsList } from "../InputsList/InputsList";
-import { InputTheme } from "../Input/Input";
-import { updateInputsData } from "@/shared/utils/InputsListFuncs/updateInputItems";
-import { saveInputsListData } from "@/shared/utils/InputsListFuncs/saveInputsListData";
-import { deleteInputItem } from "@/shared/utils/InputsListFuncs/deleteInputItem";
-import { createClientActions } from "@/shared/utils/createClientActions";
+import { createClientAction } from "@/entities/action/factory/createClientAction";
+import { isClientAction } from "@/entities/action/methods/isClientAction";
+import { createClientActions } from "@/entities/action/factory/createClientActions";
+import { LoadingSpinner } from "@/shared/components/LoadingSpinner/LoadingSpinner";
+import { InputsList } from "@/features/inputs-list/ui/InputsList";
+import { InputTheme } from "@/shared/components/Input/Input";
+import { useGetActionsListData } from "@/entities/action/methods/useGetActionsListData";
+import { deleteInputItem, saveInputsListData, updateInputsData } from "@/features/inputs-list";
 
 export const ActionsListController: FC = () => {
     const {

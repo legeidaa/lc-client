@@ -1,5 +1,5 @@
 import { emptyGameApi } from "@/shared/api";
-import { Game } from "../types/types";
+import { Game } from "../model/types";
 
 const gameApi = emptyGameApi.injectEndpoints({
     endpoints: (builder) => ({

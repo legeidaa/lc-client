@@ -1,4 +1,4 @@
-import { Action, ClientAction } from "@/entities/action";
+import { Action, ClientAction } from "../model/types";
 
 export const isClientAction = (
     action: ClientAction | Action

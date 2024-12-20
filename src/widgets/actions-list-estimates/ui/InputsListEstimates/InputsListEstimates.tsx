@@ -1,9 +1,9 @@
 import { ChangeEvent, FC } from "react";
 import styles from "./InputsListEstimates.module.scss";
-import { Input, InputTheme } from "../Input/Input";
-import { Button } from "../Button/Button";
 import classNames from "classnames";
 import { Action } from "@/entities/action";
+import { Input, InputTheme } from "@/shared/components/Input/Input";
+import { Button } from "@/shared/components/Button/Button";
 
 interface InputsListEstimatesProps {
     actions: Action[];

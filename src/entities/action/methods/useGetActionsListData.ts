@@ -1,10 +1,10 @@
 
 import { useParams, usePathname } from "next/navigation";
-import { getActionsType } from "../utils/getActionsType";
-import { userPagesNamesWithActions } from "../config/UserPagesNames";
+import { userPagesNamesWithActions } from "@/shared/config/UserPagesNames";
 import { useGetGameQuery } from "@/entities/game";
 import { Role, User } from "@/entities/user";
 import { useGetActionsByTypeQuery } from "@/entities/action";
+import { getActionsType } from "@/entities/action/methods/getActionsType";
 
 export const useGetActionsListData = () => {
     const params = useParams<{ hash: string; user: string }>();

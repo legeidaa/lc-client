@@ -14,4 +14,4 @@ export type {
     ActionToCreate,
     ClientAction,
     CreateActionsRequest,
-} from "./types/types";
+} from "./model/types";

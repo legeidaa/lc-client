@@ -1,9 +1,9 @@
 import { ChangeEvent, FC, useEffect, useState } from "react";
-import { useGetActionsListData } from "@/shared/hooks/useGetActionsListData";
-import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
-import { InputsListEstimates } from "../InputsListEstimates/InputsListEstimates";
 import styles from "./ActionsListEstimatesContoller.module.scss";
 import { Action, useUpdateActionsMutation } from "@/entities/action";
+import { LoadingSpinner } from "@/shared/components/LoadingSpinner/LoadingSpinner";
+import { useGetActionsListData } from "@/entities/action/methods/useGetActionsListData";
+import { InputsListEstimates } from "../InputsListEstimates/InputsListEstimates";
 
 export const ActionsListEstimatesContoller: FC = () => {
     const { actions, isActionsLoadingSuccess } = useGetActionsListData();

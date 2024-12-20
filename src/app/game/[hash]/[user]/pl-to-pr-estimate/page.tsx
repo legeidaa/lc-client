@@ -4,8 +4,8 @@ import { PageDescription } from "@/shared/components/PageDescription/PageDescrip
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { UserPagesNames } from "@/shared/config/UserPagesNames";
-import { ActionsListEstimatesContoller } from "@/shared/components/ActionsListEstimatesController/ActionsListEstimatesContoller";
 import { useGetGameQuery } from "@/entities/game";
+import { ActionsListEstimatesContoller } from "@/widgets/actions-list-estimates";
 
 export default function PlToPrEstimate() {
     const params = useParams<{ hash: string; user: string }>();

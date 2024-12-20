@@ -1,5 +1,5 @@
 import { emptyGameApi } from "@/shared/api";
-import { CreateUserRequest, UpdateResourcesRequest, User } from "../types/types";
+import { CreateUserRequest, UpdateResourcesRequest, User } from "../model/types";
 
 
 const userApi = emptyGameApi.injectEndpoints({

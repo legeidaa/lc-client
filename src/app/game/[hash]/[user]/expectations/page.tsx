@@ -1,7 +1,7 @@
 "use client";
 
 import { PageDescription } from "@/shared/components/PageDescription/PageDescription";
-import { ExpectationsListController } from "@/shared/components/ExpectationsListController/ExpectationsListController";
+import { ExpectationsListController } from "@/widgets/expectations-list/ui/ExpectationsListController/ExpectationsListController";
 
 export default function Home() {
     // const params = useParams<{ hash: string; user: string }>();

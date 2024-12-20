@@ -4,4 +4,4 @@ export {
     useLazyGetGameQuery,
 } from "./api/gameApi";
 
-export type { Game } from "./types/types";
+export type { Game } from "./model/types";

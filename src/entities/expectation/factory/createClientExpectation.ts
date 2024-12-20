@@ -1,5 +1,6 @@
-import { ClientExpectation } from "@/entities/expectation";
+
 import { User } from "@/entities/user";
+import { ClientExpectation } from "../model/types";
 
 export const createClientExpectation = (user: User): ClientExpectation => {
     return {

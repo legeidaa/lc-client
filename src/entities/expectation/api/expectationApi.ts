@@ -1,5 +1,5 @@
 import { emptyGameApi } from "@/shared/api";
-import { CreateExpectationRequest, Expectation } from "../types/types";
+import { CreateExpectationRequest, Expectation } from "../model/types";
 
 const expectationApi = emptyGameApi.injectEndpoints({
     endpoints: (builder) => ({

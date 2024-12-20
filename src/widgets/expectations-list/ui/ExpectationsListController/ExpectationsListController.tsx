@@ -1,16 +1,15 @@
 import { FC, useEffect, useRef, useState } from "react";
-import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
-import { InputsList } from "../InputsList/InputsList";
-import { InputTheme } from "../Input/Input";
+
 import { useParams } from "next/navigation";
-import { updateInputsData } from "@/shared/utils/InputsListFuncs/updateInputItems";
-import { saveInputsListData } from "@/shared/utils/InputsListFuncs/saveInputsListData";
-import { deleteInputItem } from "@/shared/utils/InputsListFuncs/deleteInputItem";
-import { createClientExpectations } from "@/shared/utils/createClientExpectations";
-import { createClientExpectation } from "@/shared/utils/createClientExpectation";
+import { createClientExpectations } from "@/entities/expectation/factory/createClientExpectations";
+import { createClientExpectation } from "@/entities/expectation/factory/createClientExpectation";
 import { ClientExpectation, Expectation, useCreateExpectationsMutation, useDeleteExpectationMutation, useGetExpectationsQuery, useUpdateExpectationsMutation } from "@/entities/expectation";
 import { useGetGameQuery } from "@/entities/game";
 import { User } from "@/entities/user";
+import { InputTheme } from "@/shared/components/Input/Input";
+import { InputsList } from "@/features/inputs-list/ui/InputsList";
+import { LoadingSpinner } from "@/shared/components/LoadingSpinner/LoadingSpinner";
+import { deleteInputItem, saveInputsListData, updateInputsData } from "@/features/inputs-list";
 
 export const isClientExpectation = (
     expectation: ClientExpectation | Expectation

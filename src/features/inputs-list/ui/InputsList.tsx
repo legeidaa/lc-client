@@ -1,8 +1,8 @@
 import { FC } from "react";
 import styles from "./InputsList.module.scss";
-import { Input, InputTheme } from "../Input/Input";
-import { CrossIcon } from "../Icons/CrossIcon";
-import { Button } from "../Button/Button";
+import { Input, InputTheme } from "@/shared/components/Input/Input";
+import { CrossIcon } from "@/shared/components/Icons/CrossIcon";
+import { Button } from "@/shared/components/Button/Button";
 import classNames from "classnames";
 import { Expectation } from "@/entities/expectation";
 import { Action } from "@/entities/action";

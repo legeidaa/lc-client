@@ -1,9 +1,9 @@
-import { ActionType } from "@/entities/action";
 import {
     UserPagesNames as names,
     userPagesNamesWithActions,
-} from "../config/UserPagesNames";
+} from "@/shared/config/UserPagesNames";
 import { Role } from "@/entities/user";
+import { ActionType } from "../model/types";
 
 export const getActionsType = (
     role: Role,

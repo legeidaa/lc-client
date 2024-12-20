@@ -1,6 +1,7 @@
-import { ClientExpectation } from "@/entities/expectation";
-import { createClientExpectation } from "./createClientExpectation";
+
 import { User } from "@/entities/user";
+import { ClientExpectation } from "../model/types";
+import { createClientExpectation } from "./createClientExpectation";
 
 export const createClientExpectations = (
     num: number,

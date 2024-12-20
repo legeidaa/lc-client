@@ -5,8 +5,8 @@ import styles from "./page.module.scss";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { UserPagesNames } from "@/shared/config/UserPagesNames";
-import { ActionsListController } from "@/shared/components/ActionsListController/ActionsListController";
 import { useGetGameQuery } from "@/entities/game";
+import { ActionsListController } from "@/widgets/actions-list";
 
 
 export default function Home() {

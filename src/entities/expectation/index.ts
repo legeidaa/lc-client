@@ -11,4 +11,4 @@ export type {
     ClientExpectation,
     CreateExpectationRequest,
     ExpectationToCreate,
-} from "./types/types";
+} from "./model/types";

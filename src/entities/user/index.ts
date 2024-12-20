@@ -11,4 +11,4 @@ export type {
     User,
     CreateUserRequest,
     UpdateResourcesRequest,
-} from "./types/types";
+} from "./model/types";
