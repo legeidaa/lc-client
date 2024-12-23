@@ -14,7 +14,7 @@ export const enum ButtonSize {
 
 export const enum ButtonShape {
     ROUND = "round",
-    NORMAL = "size_l",
+    NORMAL = "normal",
 }
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
