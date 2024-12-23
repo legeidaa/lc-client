@@ -1,5 +1,5 @@
 "use client";
-import { AppStore, makeStore } from "@/app/_fsd-app/redux/store";
+import { AppStore, makeStore } from "@/fsd-app/redux/store";
 import { useRef } from "react";
 import { Provider } from "react-redux";
 
