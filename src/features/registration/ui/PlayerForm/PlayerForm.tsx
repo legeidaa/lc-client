@@ -17,7 +17,7 @@ export const PlayerForm: FC<PlayerFormProps> = ({
     readonly,
     onChange,
 }) => {
-    const title = role === 'player' ? <>Введите <b>ваше</b> имя, пол и электронную почту</> :  <>Введите имя, пол, и электронную почта вашего <b>партнера</b></>
+    const title = role === 'player' ? <>Введите <b>ваше</b> имя, пол и электронную почту</> :  <>Введите имя, пол, и электронную почту вашего <b>партнера</b></>
     return (
         <div className={styles.playerForm}>
             <h3 className={styles.playerFormTitle}>

@@ -1,7 +1,7 @@
 import Logo from "@/img/logo.svg";
 import Image from "next/image";
-import StoreProvider from "../../fsd-app/redux/StoreProvider";
 import styles from "./layout.module.scss";
+import StoreProvider from "@/fsd-app/redux/StoreProvider";
 
 export default function Layout({
     children,
