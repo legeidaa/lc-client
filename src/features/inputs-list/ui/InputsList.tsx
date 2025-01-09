@@ -14,12 +14,13 @@ interface InputsListProps {
     isReadyBtnDisabled: boolean;
     placeholder: string;
     firstInputTheme: InputTheme.CLOUD | InputTheme.CLOUD_L;
+    isSaveSuccess: boolean;
     onInputChange: (value: string, i: number) => void;
     onRowDelete: (actionId: number) => void;
     onAddClick: () => void;
     onReadyClick: () => Promise<void>;
     className?: string;
-    isError?: boolean
+    isError?: boolean;
 }
 
 export const InputsList: FC<InputsListProps> = (props) => {
@@ -29,13 +30,14 @@ export const InputsList: FC<InputsListProps> = (props) => {
         isSomeFieldsEmpty,
         isReadyBtnDisabled,
         placeholder,
+        isSaveSuccess,
         onInputChange,
         onRowDelete,
         onAddClick,
         onReadyClick,
         firstInputTheme,
         className,
-        isError
+        isError,
     } = props;
 
     return (
@@ -92,6 +94,7 @@ export const InputsList: FC<InputsListProps> = (props) => {
                 <CrossIcon />
                 <span>Добавить ещё строку</span>
             </button>
+
             <div className={styles.btnWrapper}>
                 <Button
                     onClick={onReadyClick}
@@ -101,6 +104,7 @@ export const InputsList: FC<InputsListProps> = (props) => {
                     Готово
                 </Button>
             </div>
+            {isSaveSuccess && <div className={styles.success}>Данные успешно сохранены</div>}
 
             {isError && <div>Произошла ошибка</div>}
         </>

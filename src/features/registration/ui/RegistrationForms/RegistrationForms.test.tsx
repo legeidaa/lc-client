@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { renderWithProviders } from "tests/utils";
 import { server } from "tests/server";
 import { http, HttpResponse } from "msw";
+import { apiUrl } from "@/shared/config/consts";
 
 const pushMock = jest.fn();
 
@@ -12,8 +13,8 @@ jest.mock("next/navigation", () => ({
         return {
             query: {},
             push: pushMock,
-        }
-    }, 
+        };
+    },
     useParams: jest.fn(),
 }));
 
@@ -30,15 +31,14 @@ describe("RegistrationForms Component", () => {
         await waitFor(() => {
             expect(result.getByText(/ВСЕ ПОНЯТНО/i)).toBeInTheDocument();
             expect(
-                result.getByDisplayValue("test@mail.ru")
+                result.getByDisplayValue(/test@mail.ru/i)
             ).toBeInTheDocument();
         });
     });
 
     test("submits the form and creates a pair", async () => {
-
         server.use(
-            http.post("http://localhost:3001/api/user/pair", () => {
+            http.post(apiUrl + "user/pair", () => {
                 console.log("CALLED");
                 return HttpResponse.json([
                     {

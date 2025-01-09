@@ -25,6 +25,7 @@ export const useGetActionsListData = () => {
     const { data: game, isSuccess: isGameLoadingSuccess } = useGetGameQuery(
         params.hash
     );
+    
     const currentUser: User = game?.users.find(
         (u) => u.role === params.user
     ) as User;

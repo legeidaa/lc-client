@@ -3,12 +3,31 @@ import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 
 export const handlers = [
-    http.get("http://localhost:3001/api/game/*", () => {
+    http.get(process.env.API_URL + "game/:hash", () => {
         return HttpResponse.json(game);
     }),
-    // http.post("http://localhost:3001/api/user/pair", () => {
-    //     return HttpResponse.json([player, partner]);
-    // }),
+
+    http.get(process.env.API_URL + "action/by-type", () => {
+        return HttpResponse.json([
+            {
+                actionId: 1,
+                title: "Action 1",
+                estimate: null,
+                type: "green",
+                userId: 1,
+            },
+            {
+                actionId: 2,
+                title: "Action 2",
+                estimate: null,
+                type: "green",
+                userId: 1,
+            },
+        ]);
+    }),
+    http.delete(process.env.API_URL + "action/:id", ({ params }) => {
+        console.log(`Captured a "DELETE /action/${params.id}" request`);
+    }),
 ];
 
 export const server = setupServer(...handlers);
