@@ -9,7 +9,7 @@ interface LoadingSpinnerProps {
 export const LoadingSpinner: FC<LoadingSpinnerProps> = (props) => {
     const { align = "top" } = props;
     return (
-        <div className={classNames(styles.wrapper, styles[align])}>
+        <div data-testid="loading-spinner" className={classNames(styles.wrapper, styles[align])}>
             <div className={styles.spinner} />
         </div>
     );

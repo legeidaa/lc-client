@@ -1,18 +1,11 @@
 "use client";
 
-import {
-    ChangeEvent,
-    FormEvent,
-    useCallback,
-    useEffect,
-    useRef,
-    useState,
-} from "react";
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import styles from "./RegistrationForms.module.scss";
 import { useRouter, useParams } from "next/navigation";
 import { UserPagesNames } from "@/shared/config/UserPagesNames";
 import { RegFormData } from "../../model/types";
-import { Button } from "@/shared/components/Button/Button"
+import { Button } from "@/shared/components/Button/Button";
 import { PlayerForm } from "../PlayerForm/PlayerForm";
 import { useGetGameQuery } from "@/entities/game";
 import { CreateUserRequest, Sex, useCreatePairMutation } from "@/entities/user";
@@ -20,6 +13,7 @@ import { CreateUserRequest, Sex, useCreatePairMutation } from "@/entities/user";
 export default function RegistrationForms() {
     const params = useParams<{ hash: string }>();
     const router = useRouter();
+
     const { gameId, gameHash, users } = useGetGameQuery(params.hash, {
         selectFromResult: ({ data }) => ({
             gameId: data?.gameId,
@@ -58,52 +52,49 @@ export default function RegistrationForms() {
         }
     }, [users]);
 
-    const handleSubmmit = useCallback(
-        async (e: FormEvent) => {
-            e.preventDefault();
-            if (!users) {
-                throw new Error("Пользователей не существует");
-            }
+    const handleSubmmit = async (e: FormEvent) => {
+        e.preventDefault();
+        // if (!users) {
+        //     throw new Error("Пользователей не существует");
+        // }
 
-            if (users.length < 2) {
-                const createPlayerRequest: CreateUserRequest = {
-                    gameId: Number(gameId),
-                    name: regFormData["player-name"],
-                    email: regFormData["player-email"],
-                    sex: regFormData["player-sex"] as Sex,
-                    role: "player",
-                };
+        if (users && users.length < 2) {
+            const createPlayerRequest: CreateUserRequest = {
+                gameId: Number(gameId),
+                name: regFormData["player-name"],
+                email: regFormData["player-email"],
+                sex: regFormData["player-sex"] as Sex,
+                role: "player",
+            };
 
-                const createPartnerRequest: CreateUserRequest = {
-                    gameId: Number(gameId),
-                    name: regFormData["partner-name"],
-                    email: regFormData["partner-email"],
-                    sex: regFormData["partner-sex"] as Sex,
-                    role: "partner",
-                };
+            const createPartnerRequest: CreateUserRequest = {
+                gameId: Number(gameId),
+                name: regFormData["partner-name"],
+                email: regFormData["partner-email"],
+                sex: regFormData["partner-sex"] as Sex,
+                role: "partner",
+            };
 
-                const response = await createPair([
-                    createPlayerRequest,
-                    createPartnerRequest,
-                ]);
+            const response = await createPair([
+                createPlayerRequest,
+                createPartnerRequest,
+            ]);
 
-                if (response.error) {
-                    console.error(response.error);
-                } else {
-                    setReadonly(true);
-                    router.push(
-                        `/game/${gameHash}/player/${UserPagesNames.PLAYER_TO_PARTNER}`
-                    );
-                }
+            if (response.error) {
+                console.error(response.error);
             } else {
-                // обновление
+                setReadonly(true);
                 router.push(
                     `/game/${gameHash}/player/${UserPagesNames.PLAYER_TO_PARTNER}`
                 );
             }
-        },
-        [createPair, gameHash, gameId, regFormData, router, users]
-    );
+        } else {
+            // обновление
+            router.push(
+                `/game/${gameHash}/player/${UserPagesNames.PLAYER_TO_PARTNER}`
+            );
+        }
+    };
 
     const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -111,7 +102,11 @@ export default function RegistrationForms() {
     };
 
     return (
-        <form ref={form} onSubmit={handleSubmmit}>
+        <form
+            ref={form}
+            data-testid="registration-form"
+            onSubmit={handleSubmmit}
+        >
             <div className={styles.wrapper}>
                 <PlayerForm
                     role="player"

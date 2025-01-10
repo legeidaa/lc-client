@@ -73,19 +73,10 @@ export const Input: FC<InputProps> = (props) => {
                     round
                     theme={ButtonTheme.TRANSPARENT}
                     onClick={onDelete}
+                    data-testid="input-delete-btn"
                 >
                     <CrossIcon />
                 </Button>
-                // <button
-                //     disabled={isDeleteBtnDisabled}
-                //     className={classnames(
-                //         "btn btn_round btn_icon",
-                //         styles.deleteBtn
-                //     )}
-                //     onClick={onDelete}
-                // >
-                //     <CrossIcon />
-                // </button>
             )}
         </div>
     );

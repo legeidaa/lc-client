@@ -8,11 +8,36 @@ import { InputsListEstimates } from "../InputsListEstimates/InputsListEstimates"
 export const ActionsListEstimatesContoller: FC = () => {
     const { actions, isActionsLoadingSuccess } = useGetActionsListData();
 
-    const [updateActions, { isLoading: isUpdateActionsLoading }] =
-        useUpdateActionsMutation();
+    const [
+        updateActions,
+        {
+            isLoading: isUpdateActionsLoading,
+            isError: isUpdateActionsError,
+            isSuccess: isUpdateActionsSuccess,
+            status: updateActionsStatus,
+            reset: updateActionsReset,
+        },
+    ] = useUpdateActionsMutation();
 
     const [isSomeFieldsEmpty, setIsSomeFieldsEmpty] = useState(false);
     const [localActions, setLocalActions] = useState<Action[]>([]);
+
+    const isSaveSuccess =
+        updateActionsStatus === "fulfilled" && isUpdateActionsSuccess;
+
+    // очищение isSaveSuccess
+    useEffect(() => {
+        let timeoutId: ReturnType<typeof setTimeout>;
+        if (isSaveSuccess) {
+            timeoutId = setTimeout(() => {
+                updateActionsReset();
+            }, 3000);
+        }
+
+        return () => {
+            clearTimeout(timeoutId);
+        };
+    }, [isSaveSuccess, updateActionsReset]);
 
     useEffect(() => {
         if (isActionsLoadingSuccess && actions) {
@@ -80,6 +105,8 @@ export const ActionsListEstimatesContoller: FC = () => {
                 onInputChange={onInputChange}
                 onReadyClick={saveData}
                 isSomeFieldsEmpty={isSomeFieldsEmpty}
+                isSaveSuccess={isSaveSuccess}
+                isError={isUpdateActionsError}
             />
         </>
     );

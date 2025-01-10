@@ -3,13 +3,24 @@ import { FC, useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import { createClientExpectations } from "@/entities/expectation/factory/createClientExpectations";
 import { createClientExpectation } from "@/entities/expectation/factory/createClientExpectation";
-import { ClientExpectation, Expectation, useCreateExpectationsMutation, useDeleteExpectationMutation, useGetExpectationsQuery, useUpdateExpectationsMutation } from "@/entities/expectation";
+import {
+    ClientExpectation,
+    Expectation,
+    useCreateExpectationsMutation,
+    useDeleteExpectationMutation,
+    useGetExpectationsQuery,
+    useUpdateExpectationsMutation,
+} from "@/entities/expectation";
 import { useGetGameQuery } from "@/entities/game";
 import { User } from "@/entities/user";
 import { InputTheme } from "@/shared/components/Input/Input";
 import { InputsList } from "@/features/inputs-list/ui/InputsList";
 import { LoadingSpinner } from "@/shared/components/LoadingSpinner/LoadingSpinner";
-import { deleteInputItem, saveInputsListData, updateInputsData } from "@/features/inputs-list";
+import {
+    deleteInputItem,
+    saveInputsListData,
+    updateInputsData,
+} from "@/features/inputs-list";
 
 export const isClientExpectation = (
     expectation: ClientExpectation | Expectation
@@ -30,10 +41,28 @@ export const ExpectationsListController: FC = () => {
             skip: !isGameLoadingSuccess && !user,
         });
 
-    const [updateExpectations, { isLoading: isUpdateExpectationsLoading }] =
-        useUpdateExpectationsMutation();
-    const [createExpectations, { isLoading: isCreateExpectationsLoading }] =
-        useCreateExpectationsMutation();
+    const [
+        updateExpectations,
+        {
+            isSuccess: isUpdateExpectationsSuccess,
+            isLoading: isUpdateExpectationsLoading,
+            isError: isUpdateExpectationsError,
+            status: updateExpectationsStatus,
+            reset: updateExpectationsReset,
+        },
+    ] = useUpdateExpectationsMutation();
+
+    const [
+        createExpectations,
+        {
+            isSuccess: isCreateExpectationsSuccess,
+            isLoading: isCreateExpectationsLoading,
+            isError: isCreateExpectationsError,
+            status: createExpectationsStatus,
+            reset: createExpectationsReset,
+        },
+    ] = useCreateExpectationsMutation();
+
     const [deleteExpectation] = useDeleteExpectationMutation();
 
     const [btnToDelete, setBtnToDelete] = useState<number | null>(null);
@@ -43,6 +72,27 @@ export const ExpectationsListController: FC = () => {
     const [isSomeFieldsEmpty, setIsSomeFieldsEmpty] = useState(false);
     const isInitialized = useRef(false);
     const isUpdated = useRef(false);
+
+    const isSaveSuccess =
+        (createExpectationsStatus === "fulfilled" &&
+            isCreateExpectationsSuccess) ||
+        (updateExpectationsStatus === "fulfilled" &&
+            isUpdateExpectationsSuccess);
+
+    // очищение isSaveSuccess
+    useEffect(() => {
+        let timeoutId: ReturnType<typeof setTimeout>;
+        if (isSaveSuccess) {
+            timeoutId = setTimeout(() => {
+                createExpectationsReset();
+                updateExpectationsReset();
+            }, 3000);
+        }
+
+        return () => {
+            clearTimeout(timeoutId);
+        };
+    }, [createExpectationsReset, isSaveSuccess, updateExpectationsReset]);
 
     useEffect(() => {
         if (
@@ -146,7 +196,9 @@ export const ExpectationsListController: FC = () => {
             onAddClick={onAddClick}
             onReadyClick={saveData}
             isSomeFieldsEmpty={isSomeFieldsEmpty}
+            isError={isCreateExpectationsError || isUpdateExpectationsError}
             className="expectationsList"
+            isSaveSuccess={isSaveSuccess}
         />
     );
 };
