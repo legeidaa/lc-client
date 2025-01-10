@@ -13,6 +13,8 @@ interface InputsListEstimatesProps {
     onInputChange: (e: ChangeEvent<HTMLInputElement>, i: number) => void;
     onReadyClick: () => Promise<void>;
     className?: string;
+    isError?: boolean;
+    isSaveSuccess: boolean;
 }
 
 export const InputsListEstimates: FC<InputsListEstimatesProps> = (props) => {
@@ -24,6 +26,8 @@ export const InputsListEstimates: FC<InputsListEstimatesProps> = (props) => {
         onInputChange,
         onReadyClick,
         className,
+        isError,
+        isSaveSuccess,
     } = props;
 
     return (
@@ -36,7 +40,9 @@ export const InputsListEstimates: FC<InputsListEstimatesProps> = (props) => {
             >
                 {actions.map((action, i) => {
                     const estimate =
-                        action.estimate === null ? "" : action.estimate.toString();
+                        action.estimate === null
+                            ? ""
+                            : action.estimate.toString();
 
                     return (
                         <li
@@ -82,6 +88,12 @@ export const InputsListEstimates: FC<InputsListEstimatesProps> = (props) => {
                     Готово
                 </Button>
             </div>
+
+            {isSaveSuccess && (
+                <div className={styles.success}>Данные успешно сохранены</div>
+            )}
+
+            {isError && <div>Произошла ошибка</div>}
         </>
     );
 };

@@ -94,11 +94,9 @@ export const ActionsListController: FC = () => {
 
             setClientActions(newActions);
             isInitialized.current = true;
-
         } else if (isActionsLoadingSuccess && actions && isUpdated.current) {
             setClientActions([...actions]);
             isUpdated.current = false;
-
         } else if (isActionsLoadingSuccess && actions && btnToDelete !== null) {
             setClientActions(
                 clientActions.filter((item) => item.actionId !== btnToDelete)

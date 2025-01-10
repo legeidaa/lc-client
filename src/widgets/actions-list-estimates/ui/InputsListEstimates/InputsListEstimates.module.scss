@@ -37,7 +37,9 @@
     padding-top: 12px;
     padding-left: 32px;
     font-size: 20px;
+    text-align: right;
 }
+
 .inputsWrapper {
     display: flex;
     gap: 16px;
@@ -46,6 +48,13 @@
 .inputTitle {
     width: 100%;
 }
+
 .inputEstimate {
     flex-shrink: 0;
+}
+
+.success {
+    font-size: 18px;
+    text-align: center;
+    margin-top: 24px;
 }
