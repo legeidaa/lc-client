@@ -1,0 +1,36 @@
+.descr {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 80px;
+}
+
+.descrIcon {
+    flex-shrink: 0;
+    width: 117px;
+    height: 117px;
+}
+
+.descrText {
+    h3 {
+        font-weight: 700;
+        font-size: 32px;
+        margin-bottom: 24px;
+    }
+
+    p {
+        font-weight: 400;
+        font-size: 28px;
+        margin-bottom: 0;
+    }
+}
+
+.textarea {
+    margin-bottom: 36px;
+}
+
+.messageBtns {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}

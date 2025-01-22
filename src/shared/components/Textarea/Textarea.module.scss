@@ -1,0 +1,33 @@
+.textarea {
+    position: relative;
+}
+
+.textareaElement {
+    border: 2px solid var(--white);
+    height: 324px;
+    width: 100%;
+    min-height: 100px;
+    resize: vertical;
+    border-radius: 50px;
+    color: var(--white);
+    background: transparent;
+    font-weight: 400;
+    transition: 0.15s ease-in-out box-shadow;
+    padding: 24px 40px;
+    font-weight: 400;
+    font-size: 30px;
+
+    &::placeholder {
+        opacity: 0.7;
+
+        color: var(--white);
+    }
+
+    &:focus-visible {
+        box-shadow: 0 0 0 3px var(--btn-active-bg);
+    }
+}
+
+.error {
+    margin-top: 10px;
+}

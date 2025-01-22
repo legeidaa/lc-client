@@ -29,3 +29,8 @@ export interface UpdateResourcesRequest {
     userId: number;
     hasResources: boolean;
 }
+
+export interface UpdateMessageRequest {
+    userId: number;
+    message: string;
+}

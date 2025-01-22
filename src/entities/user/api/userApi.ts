@@ -1,6 +1,10 @@
 import { emptyGameApi } from "@/shared/api";
-import { CreateUserRequest, UpdateResourcesRequest, User } from "../model/types";
-
+import {
+    CreateUserRequest,
+    UpdateMessageRequest,
+    UpdateResourcesRequest,
+    User,
+} from "../model/types";
 
 const userApi = emptyGameApi.injectEndpoints({
     endpoints: (builder) => ({
@@ -21,7 +25,14 @@ const userApi = emptyGameApi.injectEndpoints({
             }),
             invalidatesTags: ["User"],
         }),
-
+        updateUserMessage: builder.mutation<User, UpdateMessageRequest>({
+            query: (updateMessageBody) => ({
+                url: `user/message`,
+                method: "PUT",
+                body: updateMessageBody,
+            }),
+            invalidatesTags: ["User"],
+        }),
         getUsers: builder.query<User[], number>({
             query: (hash) => `user/${hash}`,
             providesTags: ["User"],
@@ -35,4 +46,5 @@ export const {
     useGetUsersQuery,
     useLazyGetUsersQuery,
     useUpdateUserResourcesMutation,
+    useUpdateUserMessageMutation,
 } = userApi;
