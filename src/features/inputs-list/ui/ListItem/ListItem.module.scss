@@ -1,0 +1,21 @@
+.listItem {
+    margin-bottom: 24px;
+
+    &.cloud {
+        margin-bottom: 36px;
+
+        .emptyField {
+            bottom: -12px;
+            position: relative;
+        }
+    }
+
+    &.cloudL {
+        margin-bottom: 56px;
+
+        .emptyField {
+            bottom: -32px;
+            position: relative;
+        }
+    }
+}

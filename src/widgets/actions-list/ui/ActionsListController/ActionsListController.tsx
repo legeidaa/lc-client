@@ -10,7 +10,7 @@ import { createClientAction } from "@/entities/action/factory/createClientAction
 import { isClientAction } from "@/entities/action/methods/isClientAction";
 import { createClientActions } from "@/entities/action/factory/createClientActions";
 import { LoadingSpinner } from "@/shared/components/LoadingSpinner/LoadingSpinner";
-import { InputsList } from "@/features/inputs-list/ui/InputsList";
+import { InputsList } from "@/features/inputs-list/ui/InputsList/InputsList";
 import { InputTheme } from "@/shared/components/Input/Input";
 import { useGetActionsListData } from "@/entities/action/methods/useGetActionsListData";
 import {
@@ -37,6 +37,7 @@ export const ActionsListController: FC = () => {
             reset: updateActionsReset,
         },
     ] = useUpdateActionsMutation();
+
     const [
         createActions,
         {
@@ -47,8 +48,15 @@ export const ActionsListController: FC = () => {
             reset: createActionsReset,
         },
     ] = useCreateActionsMutation();
-    const [deleteAction, { isError: isDeleteActionError }] =
-        useDeleteActionMutation();
+
+    const [
+        deleteAction,
+        {
+            isError: isDeleteActionError,
+            isLoading: isDeleteActionLoading,
+            reset: resetDeleteAction,
+        },
+    ] = useDeleteActionMutation();
 
     const [btnToDelete, setBtnToDelete] = useState<number | null>(null);
     const [clientActions, setClientActions] = useState<
@@ -97,21 +105,8 @@ export const ActionsListController: FC = () => {
         } else if (isActionsLoadingSuccess && actions && isUpdated.current) {
             setClientActions([...actions]);
             isUpdated.current = false;
-        } else if (isActionsLoadingSuccess && actions && btnToDelete !== null) {
-            setClientActions(
-                clientActions.filter((item) => item.actionId !== btnToDelete)
-            );
-            setBtnToDelete(null);
-        }
-    }, [
-        actions,
-        actionsType,
-        isActionsLoadingSuccess,
-        user,
-        btnToDelete,
-        setBtnToDelete,
-        clientActions,
-    ]);
+        } 
+    }, [actions, actionsType, isActionsLoadingSuccess, user]);
 
     const onInputChange = (value: string, i: number) => {
         updateInputsData(
@@ -131,13 +126,19 @@ export const ActionsListController: FC = () => {
     };
 
     const onRowDelete = async (actionId: number) => {
-        deleteInputItem(
+        await deleteInputItem(
             actionId,
             clientActions,
             isClientAction,
             setBtnToDelete,
             deleteAction
         );
+        
+        setClientActions(
+            clientActions.filter((item) => item.actionId !== actionId)
+        );
+        setBtnToDelete(null);
+        resetDeleteAction();
     };
 
     const saveData = async () => {
@@ -160,6 +161,7 @@ export const ActionsListController: FC = () => {
         <InputsList
             actions={clientActions}
             btnToDelete={btnToDelete}
+            isDeleteActionLoading={isDeleteActionLoading}
             isReadyBtnDisabled={
                 isCreateActionsLoading || isUpdateActionsLoading
             }

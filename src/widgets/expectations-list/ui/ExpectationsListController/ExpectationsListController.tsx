@@ -14,7 +14,7 @@ import {
 import { useGetGameQuery } from "@/entities/game";
 import { User } from "@/entities/user";
 import { InputTheme } from "@/shared/components/Input/Input";
-import { InputsList } from "@/features/inputs-list/ui/InputsList";
+import { InputsList } from "@/features/inputs-list/ui/InputsList/InputsList";
 import { LoadingSpinner } from "@/shared/components/LoadingSpinner/LoadingSpinner";
 import {
     deleteInputItem,
@@ -63,7 +63,14 @@ export const ExpectationsListController: FC = () => {
         },
     ] = useCreateExpectationsMutation();
 
-    const [deleteExpectation] = useDeleteExpectationMutation();
+    const [
+        deleteExpectation,
+        {
+            isError: isDeleteExpectationError,
+            isLoading: isDeleteExpectationLoading,
+            reset: resetDeleteExpectation,
+        },
+    ] = useDeleteExpectationMutation();
 
     const [btnToDelete, setBtnToDelete] = useState<number | null>(null);
     const [clientExpectations, setClientExpectations] = useState<
@@ -119,25 +126,8 @@ export const ExpectationsListController: FC = () => {
         ) {
             setClientExpectations([...expectations]);
             isUpdated.current = false;
-        } else if (
-            isExpectationsLoadingSuccess &&
-            expectations &&
-            btnToDelete !== null
-        ) {
-            setClientExpectations(
-                clientExpectations.filter(
-                    (item) => item.expectationId !== btnToDelete
-                )
-            );
-            setBtnToDelete(null);
         }
-    }, [
-        btnToDelete,
-        clientExpectations,
-        expectations,
-        isExpectationsLoadingSuccess,
-        user,
-    ]);
+    }, [expectations, isExpectationsLoadingSuccess, user]);
 
     const onInputChange = (value: string, i: number) => {
         updateInputsData(
@@ -157,13 +147,21 @@ export const ExpectationsListController: FC = () => {
     };
 
     const onRowDelete = async (expectationId: number) => {
-        deleteInputItem(
+        await deleteInputItem(
             expectationId,
             clientExpectations,
             isClientExpectation,
             setBtnToDelete,
             deleteExpectation
         );
+        
+        setClientExpectations(
+            clientExpectations.filter(
+                (item) => item.expectationId !== expectationId
+            )
+        );
+        setBtnToDelete(null);
+        resetDeleteExpectation();
     };
 
     const saveData = async () => {
@@ -184,6 +182,7 @@ export const ExpectationsListController: FC = () => {
 
     return (
         <InputsList
+            isDeleteActionLoading={isDeleteExpectationLoading}
             actions={clientExpectations}
             btnToDelete={btnToDelete}
             isReadyBtnDisabled={
@@ -196,7 +195,11 @@ export const ExpectationsListController: FC = () => {
             onAddClick={onAddClick}
             onReadyClick={saveData}
             isSomeFieldsEmpty={isSomeFieldsEmpty}
-            isError={isCreateExpectationsError || isUpdateExpectationsError}
+            isError={
+                isCreateExpectationsError ||
+                isUpdateExpectationsError ||
+                isDeleteExpectationError
+            }
             className="expectationsList"
             isSaveSuccess={isSaveSuccess}
         />

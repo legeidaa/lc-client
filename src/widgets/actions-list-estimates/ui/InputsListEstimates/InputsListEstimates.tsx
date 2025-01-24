@@ -30,6 +30,41 @@ export const InputsListEstimates: FC<InputsListEstimatesProps> = (props) => {
         isSaveSuccess,
     } = props;
 
+    const list = actions.map((action, i) => {
+        const estimate =
+            action.estimate === null ? "" : action.estimate.toString();
+
+        return (
+            <li key={action.actionId} className={classNames(styles.listItem)}>
+                <div className={styles.inputsWrapper}>
+                    <Input
+                        theme={InputTheme.ACTION_WHITE}
+                        className={styles.inputTitle}
+                        value={action.title}
+                        readOnly
+                        type="text"
+                        tabIndex={-1}
+                    />
+                    <Input
+                        theme={InputTheme.ESTIMATE}
+                        className={styles.inputEstimate}
+                        value={estimate}
+                        placeholder={placeholder}
+                        type="number"
+                        min={0}
+                        max={100}
+                        onChange={(e) => onInputChange(e, i)}
+                    />
+                </div>
+                {isSomeFieldsEmpty && action.estimate === null && (
+                    <div className={styles.emptyField}>
+                        Поле не должно быть пустым
+                    </div>
+                )}
+            </li>
+        );
+    });
+
     return (
         <>
             <ul
@@ -38,45 +73,7 @@ export const InputsListEstimates: FC<InputsListEstimatesProps> = (props) => {
                     className && styles[className]
                 )}
             >
-                {actions.map((action, i) => {
-                    const estimate =
-                        action.estimate === null
-                            ? ""
-                            : action.estimate.toString();
-
-                    return (
-                        <li
-                            key={action.actionId}
-                            className={classNames(styles.listItem)}
-                        >
-                            <div className={styles.inputsWrapper}>
-                                <Input
-                                    theme={InputTheme.ACTION_WHITE}
-                                    className={styles.inputTitle}
-                                    value={action.title}
-                                    readOnly
-                                    type="text"
-                                    tabIndex={-1}
-                                />
-                                <Input
-                                    theme={InputTheme.ESTIMATE}
-                                    className={styles.inputEstimate}
-                                    value={estimate}
-                                    placeholder={placeholder}
-                                    type="number"
-                                    min={0}
-                                    max={100}
-                                    onChange={(e) => onInputChange(e, i)}
-                                />
-                            </div>
-                            {isSomeFieldsEmpty && action.estimate === null && (
-                                <div className={styles.emptyField}>
-                                    Поле не должно быть пустым
-                                </div>
-                            )}
-                        </li>
-                    );
-                })}
+                {list}
             </ul>
 
             <div className={styles.btnWrapper}>

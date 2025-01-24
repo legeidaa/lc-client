@@ -102,8 +102,10 @@ describe("ActionsListController", () => {
             }
         });
 
-        const inputs = result.getAllByPlaceholderText(/Что вы делаете/i);
-        expect(inputs).toHaveLength(3);
+        await waitFor(() => {
+            const inputs = result.getAllByPlaceholderText(/Что вы делаете/i);
+            expect(inputs).toHaveLength(3);
+        });
     });
 
     test("doesnt save action with empty value", async () => {
