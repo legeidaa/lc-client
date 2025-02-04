@@ -153,6 +153,8 @@ export const ActionsListController: FC = () => {
         );
     };
 
+    console.log(actions);
+    
     if (!isActionsLoadingSuccess) {
         return <LoadingSpinner />;
     }

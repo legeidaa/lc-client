@@ -27,7 +27,7 @@ export default function Resources() {
             userId: user.userId,
         });   
 
-        router.push(`/game/${game?.gameHash}/player/${UserPagesNames.PARTNER_TO_PLAYER}`);
+        router.push(`/game/${params.hash}/${params.user}/${UserPagesNames.PARTNER_TO_PLAYER}`);
     };   
 
     return (
@@ -60,7 +60,7 @@ export default function Resources() {
                     К СОЖАЛЕНИЮ, НА СЕБЯ ОСТАЕТСЯ МАЛО
                 </Button>
 
-                <Link href={`/game/${game?.gameHash}/player/pr-to-pl`}>Следующая страница</Link>
+                <Link href={`/game/${params.hash}/${params.user}/${UserPagesNames.PARTNER_TO_PLAYER}`}>Следующая страница</Link>
             </div>
         </div>
     );

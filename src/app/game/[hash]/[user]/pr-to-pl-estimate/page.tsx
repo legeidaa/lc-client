@@ -4,12 +4,10 @@ import { PageDescription } from "@/shared/components/PageDescription/PageDescrip
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { UserPagesNames } from "@/shared/config/UserPagesNames";
-import { useGetGameQuery } from "@/entities/game";
 import { ActionsListEstimatesContoller } from "@/widgets/actions-list-estimates";
 
 export default function PlToPrEstimate() {
     const params = useParams<{ hash: string; user: string }>();
-    const { data: game } = useGetGameQuery(params.hash);
 
     return (
         <div className="container">
@@ -23,7 +21,7 @@ export default function PlToPrEstimate() {
             <ActionsListEstimatesContoller />
 
             <Link
-                href={`/game/${game?.gameHash}/player/${UserPagesNames.EXPECTATIONS}`}
+                href={`/game/${params.hash}/${params.user}/${UserPagesNames.EXPECTATIONS}`}
             >
                 Следующая страница
             </Link>

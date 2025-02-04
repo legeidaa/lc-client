@@ -5,13 +5,11 @@ import styles from "./page.module.scss";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { UserPagesNames } from "@/shared/config/UserPagesNames";
-import { useGetGameQuery } from "@/entities/game";
 import { ActionsListController } from "@/widgets/actions-list";
 
 
 export default function Home() {
     const params = useParams<{ hash: string; user: string }>();
-    const { data: game } = useGetGameQuery(params.hash);
 
     return (
         <div className="container">
@@ -56,7 +54,7 @@ export default function Home() {
             </div>
             <ActionsListController />
 
-            <Link href={`/game/${game?.gameHash}/player/${UserPagesNames.RESOURCES}`}>Следующая страница</Link>
+            <Link href={`/game/${params.hash}/${params.user}/${UserPagesNames.RESOURCES}`}>Следующая страница</Link>
         </div>
     );
 }
