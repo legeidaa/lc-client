@@ -1,5 +1,6 @@
 import { emptyGameApi } from "@/shared/api";
 import { Game } from "../model/types";
+import { Role } from "@/entities/user";
 
 const gameApi = emptyGameApi.injectEndpoints({
     endpoints: (builder) => ({
@@ -12,11 +13,20 @@ const gameApi = emptyGameApi.injectEndpoints({
 
         getGame: builder.query<Game, string>({
             query: (hash) => `game/${hash}`,
-            providesTags: ["User"],
+            providesTags: ["Game"],
+        }),
+
+        changeCurrentUserRole: builder.mutation<Game, { hash: string; roleToUpdate: Role }>({
+            query: (body) => ({
+                url: "game/change-role",
+                method: "PATCH",
+                body,
+            }),
+            invalidatesTags: ["Game"],
         }),
     }),
     overrideExisting: false,
 });
 
-export const { useCreateGameMutation, useGetGameQuery, useLazyGetGameQuery } =
+export const { useCreateGameMutation, useGetGameQuery, useLazyGetGameQuery, useChangeCurrentUserRoleMutation } =
     gameApi;

@@ -30,7 +30,7 @@ export default function Message() {
     }, [user]);
 
     const goToNextPage = () => {
-        router.push(`/game/${game?.gameHash}/change-player}`);
+        router.push(`/game/${game?.gameHash}/change-player`);
     };
 
     const handleTextareaChange = (e: ChangeEvent<HTMLTextAreaElement>) => {

@@ -1,11 +1,14 @@
 "use client";
 
+import { useGetGameQuery } from "@/entities/game";
 import { PageDescription } from "@/shared/components/PageDescription/PageDescription";
 import { ExpectationsListController } from "@/widgets/expectations-list/ui/ExpectationsListController/ExpectationsListController";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 export default function Home() {
-    // const params = useParams<{ hash: string; user: string }>();
-    // const { data: game } = useGetGameQuery(params.hash);
+    const params = useParams<{ hash: string; user: string }>();
+    const { data: game } = useGetGameQuery(params.hash);
 
     return (
         <div className="container">
@@ -28,11 +31,11 @@ export default function Home() {
 
             <ExpectationsListController />
 
-            {/* <Link
-                href={`/game/${game?.gameHash}/player/${UserPagesNames.PLAYER_TO_PARTNER_ESTIMATE}`}
+            <Link
+                href={`/game/${game?.gameHash}/player/message`}
             >
                 Следующая страница
-            </Link> */}
+            </Link>
         </div>
     );
 }
