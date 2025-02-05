@@ -5,9 +5,10 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { UserPagesNames } from "@/shared/config/UserPagesNames";
 import { ActionsListEstimatesContoller } from "@/widgets/actions-list-estimates";
+import { Role } from "@/entities/user";
 
 export default function PlToPrEstimate() {
-    const params = useParams<{ hash: string; user: string }>();
+    const params = useParams<{ hash: string; user: Role }>();
 
     return (
         <div className="container">

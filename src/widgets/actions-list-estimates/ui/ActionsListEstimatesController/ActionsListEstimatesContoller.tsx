@@ -6,7 +6,8 @@ import { useGetActionsListData } from "@/entities/action/methods/useGetActionsLi
 import { InputsListEstimates } from "../InputsListEstimates/InputsListEstimates";
 
 export const ActionsListEstimatesContoller: FC = () => {
-    const { actions, isActionsLoadingSuccess } = useGetActionsListData();
+    const { actions, isActionsLoadingSuccess } =
+        useGetActionsListData();
 
     const [
         updateActions,
