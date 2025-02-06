@@ -5,6 +5,7 @@ import { ChangeEvent, FC } from "react";
 import styles from "./ListItem.module.scss";
 
 interface ListItemProps {
+    isPartnerPrToPlPage: boolean;
     action: Action;
     isSomeFieldsEmpty: boolean;
     placeholder: string;
@@ -13,10 +14,22 @@ interface ListItemProps {
 }
 
 export const ListItem: FC<ListItemProps> = (props) => {
-    const { action, isSomeFieldsEmpty, placeholder, onInputChange, index } =
-        props;
+    const {
+        action,
+        isSomeFieldsEmpty,
+        placeholder,
+        onInputChange,
+        index,
+        isPartnerPrToPlPage,
+    } = props;
 
-    const estimate = action.estimate === null ? "" : action.estimate.toString();
+    
+    const estimate =
+        isPartnerPrToPlPage && action.type === "green"
+            ? action.partnerEstimate
+            : action.estimate;
+
+    const value = estimate === null ? "" : estimate.toString();
 
     return (
         <li key={action.actionId} className={classNames(styles.listItem)}>
@@ -32,7 +45,7 @@ export const ListItem: FC<ListItemProps> = (props) => {
                 <Input
                     theme={InputTheme.ESTIMATE}
                     className={styles.inputEstimate}
-                    value={estimate}
+                    value={value}
                     placeholder={placeholder}
                     type="number"
                     min={0}
@@ -40,7 +53,7 @@ export const ListItem: FC<ListItemProps> = (props) => {
                     onChange={(e) => onInputChange(e, index)}
                 />
             </div>
-            {isSomeFieldsEmpty && action.estimate === null && (
+            {isSomeFieldsEmpty && estimate === null && (
                 <div className={styles.emptyField}>
                     Поле не должно быть пустым
                 </div>

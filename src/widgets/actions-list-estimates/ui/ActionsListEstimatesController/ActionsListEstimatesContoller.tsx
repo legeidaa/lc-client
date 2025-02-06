@@ -4,9 +4,11 @@ import { Action, useUpdateActionsMutation } from "@/entities/action";
 import { LoadingSpinner } from "@/shared/components/LoadingSpinner/LoadingSpinner";
 import { useGetActionsListData } from "@/entities/action/methods/useGetActionsListData";
 import { InputsListEstimates } from "../InputsListEstimates/InputsListEstimates";
+import { updateLocalActionEstimate } from "../../utils/updateLocalActionEstimate";
+
 
 export const ActionsListEstimatesContoller: FC = () => {
-    const { actions, isActionsLoadingSuccess } =
+    const { actions, isActionsLoadingSuccess, isPartnerPrToPlPage } =
         useGetActionsListData();
 
     const [
@@ -46,42 +48,42 @@ export const ActionsListEstimatesContoller: FC = () => {
         }
     }, [actions, isActionsLoadingSuccess]);
 
-    const onInputChange = (e: ChangeEvent<HTMLInputElement>, i: number) => {
+    const inputChangeHandler = (
+        e: ChangeEvent<HTMLInputElement>,
+        action: Action,
+        i: number
+    ) => {
         const { value } = e.target;
 
-        let correctedValue;
-        const trimmedValue = value.replace(/^0+(?!$)/, "");
-        const numberValue = parseInt(trimmedValue);
-
-        if (isNaN(numberValue)) {
-            correctedValue = "";
-        } else if (numberValue > 100) {
-            correctedValue = "100";
-        } else if (numberValue < 0) {
-            correctedValue = "0";
+        if (isPartnerPrToPlPage && action.type === "green") {
+            updateLocalActionEstimate(
+                value,
+                "partnerEstimate",
+                i,
+                localActions,
+                setLocalActions,
+                setIsSomeFieldsEmpty
+            );
         } else {
-            correctedValue = trimmedValue;
-        }
-
-        const newItems = [...localActions];
-        if (newItems[i]) {
-            const newItem = { ...newItems[i] };
-            newItem.estimate = Number(correctedValue);
-            newItems[i] = newItem;
-            setLocalActions(newItems);
-        }
-        const isSomeFieldsEmpty = newItems.some(
-            (item) => item.estimate === null
-        );
-        if (!isSomeFieldsEmpty) {
-            setIsSomeFieldsEmpty(false);
+            updateLocalActionEstimate(
+                value,
+                "estimate",
+                i,
+                localActions,
+                setLocalActions,
+                setIsSomeFieldsEmpty
+            );
         }
     };
 
     const saveData = async () => {
-        const isSomeFieldsEmpty = localActions.some(
-            (item) => item.estimate === null
-        );
+        const isSomeFieldsEmpty = localActions.some((action) => {
+            if (isPartnerPrToPlPage && action.type === "green") {
+                return action.partnerEstimate === null;
+            } else {
+                return action.estimate === null;
+            }
+        });        
 
         if (isSomeFieldsEmpty) {
             setIsSomeFieldsEmpty(true);
@@ -100,10 +102,11 @@ export const ActionsListEstimatesContoller: FC = () => {
                 Максимальная стоимость одного действия – 100 любкоинов
             </div>
             <InputsListEstimates
+                isPartnerPrToPlPage={isPartnerPrToPlPage}
                 actions={localActions}
                 isReadyBtnDisabled={isUpdateActionsLoading}
                 placeholder="0"
-                onInputChange={onInputChange}
+                onInputChange={inputChangeHandler}
                 onReadyClick={saveData}
                 isSomeFieldsEmpty={isSomeFieldsEmpty}
                 isSaveSuccess={isSaveSuccess}

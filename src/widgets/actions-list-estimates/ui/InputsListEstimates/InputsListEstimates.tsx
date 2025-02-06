@@ -6,11 +6,16 @@ import { Button } from "@/shared/components/Button/Button";
 import { ListItem } from "../ListItem/ListItem";
 
 interface InputsListEstimatesProps {
+    isPartnerPrToPlPage: boolean;
     actions: Action[];
     isSomeFieldsEmpty: boolean;
     isReadyBtnDisabled: boolean;
     placeholder: string;
-    onInputChange: (e: ChangeEvent<HTMLInputElement>, i: number) => void;
+    onInputChange: (
+        e: ChangeEvent<HTMLInputElement>,
+        action: Action,
+        i: number
+    ) => void;
     onReadyClick: () => Promise<void>;
     className?: string;
     isError?: boolean;
@@ -19,6 +24,7 @@ interface InputsListEstimatesProps {
 
 export const InputsListEstimates: FC<InputsListEstimatesProps> = (props) => {
     const {
+        isPartnerPrToPlPage,
         actions,
         isSomeFieldsEmpty,
         isReadyBtnDisabled,
@@ -31,14 +37,14 @@ export const InputsListEstimates: FC<InputsListEstimatesProps> = (props) => {
     } = props;
 
     const list = actions.map((action, i) => {
-
         return (
             <ListItem
+                isPartnerPrToPlPage={isPartnerPrToPlPage}
                 key={action.actionId}
                 action={action}
                 isSomeFieldsEmpty={isSomeFieldsEmpty}
                 placeholder={placeholder}
-                onInputChange={(e) => onInputChange(e, i)}
+                onInputChange={(e) => onInputChange(e, action, i)}
                 index={i}
             />
         );

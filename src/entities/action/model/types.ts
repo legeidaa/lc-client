@@ -3,6 +3,7 @@ export type ActionType = "green" | "yellow" | "blue" | "gray";
 export interface Action {
     actionId: number;
     estimate: number | null;
+    partnerEstimate: number | null;
     title: string;
     type: ActionType;
     userId: number;
