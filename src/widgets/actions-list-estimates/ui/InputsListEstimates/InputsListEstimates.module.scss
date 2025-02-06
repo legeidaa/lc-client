@@ -9,50 +9,6 @@
     margin-bottom: 48px;
 }
 
-.listItem {
-    margin-bottom: 24px;
-
-    &.cloud {
-        margin-bottom: 36px;
-
-        .emptyField {
-            bottom: -12px;
-            position: relative;
-        }
-    }
-
-    &.cloudL {
-        margin-bottom: 56px;
-
-        .emptyField {
-            bottom: -32px;
-            position: relative;
-        }
-    }
-
-
-}
-
-.emptyField {
-    padding-top: 12px;
-    padding-left: 32px;
-    font-size: 20px;
-    text-align: right;
-}
-
-.inputsWrapper {
-    display: flex;
-    gap: 16px;
-}
-
-.inputTitle {
-    width: 100%;
-}
-
-.inputEstimate {
-    flex-shrink: 0;
-}
-
 .success {
     font-size: 18px;
     text-align: center;

@@ -15,10 +15,12 @@ import { useEffect, useState } from "react";
 function getPageName(
     path: string
 ): (typeof userPagesNamesWithActions)[number] | undefined {
-    return userPagesNamesWithActions.find((name) => path.split('/').includes(name));
+    return userPagesNamesWithActions.find((name) =>
+        path.split("/").includes(name)
+    );
 }
 
-function getCurrentUser(game: Game | undefined, role: Role): User {
+function getUser(game: Game | undefined, role: Role): User {
     return game?.users.find((u) => u.role === role) as User;
 }
 
@@ -35,7 +37,7 @@ export const useGetActionsListData = () => {
         params.hash
     );
 
-    const currentUser: User = getCurrentUser(game, params.user);
+    const currentUser: User = getUser(game, params.user);
 
     if (game && !currentUser) throw new Error("Пользователь не найден");
 
@@ -51,7 +53,7 @@ export const useGetActionsListData = () => {
         );
 
     // на странице partner/pr-to-pl-estimate должны быть green и gray действия
-    const isPartnerPrToPl =
+    const isPartnerPrToPlPage =
         params.user === "partner" &&
         pageName === UserPagesNames.PARTNER_TO_PLAYER_ESTIMATE;
 
@@ -62,48 +64,44 @@ export const useGetActionsListData = () => {
 
     //загрузка greenActions
     useEffect(() => {
-        if (isPartnerPrToPl) {
-            const playerId = game?.users.find(
-                (u) => u.role === "player"
-            )?.userId;
+        if (!isPartnerPrToPlPage) return;
 
-            if (playerId && !greenActions && !isGreenActionsLoadingSuccess) {
-                console.log('get green actions');
-                
-                getGreenActions({
-                    type: "green",
-                    userId: playerId,
-                });
-            }
+        const player = getUser(game, "player");
+
+        if (player.userId && !greenActions && !isGreenActionsLoadingSuccess) {
+            getGreenActions({
+                type: "green",
+                userId: player.userId,
+            });
         }
     }, [
-        game?.users,
+        game,
         getGreenActions,
         greenActions,
         isGreenActionsLoadingSuccess,
-        isPartnerPrToPl,
+        isPartnerPrToPlPage,
     ]);
 
     const [resultActions, setResultActions] = useState<typeof actions>();
 
     useEffect(() => {
-        if (isActionsLoadingSuccess && actions) {
-            if (
-                isPartnerPrToPl &&
-                greenActions &&
-                isGreenActionsLoadingSuccess
-            ) {
-                setResultActions([...actions, ...greenActions]);
-            } else {
-                setResultActions(actions);
-            }
+        if (!(isActionsLoadingSuccess && actions)) return;
+
+        if (
+            isPartnerPrToPlPage &&
+            greenActions &&
+            isGreenActionsLoadingSuccess
+        ) {
+            setResultActions([...actions, ...greenActions]);
+        } else {
+            setResultActions(actions);
         }
     }, [
         actions,
         greenActions,
         isActionsLoadingSuccess,
         isGreenActionsLoadingSuccess,
-        isPartnerPrToPl,
+        isPartnerPrToPlPage,
     ]);
 
     return {
@@ -115,5 +113,6 @@ export const useGetActionsListData = () => {
         isGameLoadingSuccess,
         isActionsLoadingSuccess,
         pageName,
+        isPartnerPrToPlPage,
     };
 };
