@@ -152,8 +152,6 @@ export const ActionsListController: FC = () => {
             isUpdated
         );
     };
-
-    console.log(actions);
     
     if (!isActionsLoadingSuccess) {
         return <LoadingSpinner />;

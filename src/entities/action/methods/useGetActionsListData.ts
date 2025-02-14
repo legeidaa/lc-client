@@ -65,14 +65,19 @@ export const useGetActionsListData = () => {
     //загрузка greenActions
     useEffect(() => {
         if (!isPartnerPrToPlPage) return;
+        if (game) {
+            const player = getUser(game, "player");
 
-        const player = getUser(game, "player");
-
-        if (player.userId && !greenActions && !isGreenActionsLoadingSuccess) {
-            getGreenActions({
-                type: "green",
-                userId: player.userId,
-            });
+            if (
+                player.userId &&
+                !greenActions &&
+                !isGreenActionsLoadingSuccess
+            ) {
+                getGreenActions({
+                    type: "green",
+                    userId: player.userId,
+                });
+            }
         }
     }, [
         game,

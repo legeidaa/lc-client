@@ -29,7 +29,7 @@ afterEach(() => {
 
 describe("ActionsListController", () => {
     jest.mocked(useParams).mockReturnValue({ hash: "test", user: "player" });
-    pathnameMock.mockImplementation(() => "/pl-to-pr");
+    jest.mocked(pathnameMock).mockReturnValue("/pl-to-pr");
 
     test("renders loading spinner initially", () => {
         const result = renderWithProviders(<ActionsListController />);
