@@ -16,3 +16,5 @@ export interface ClientAction extends Action {
 export type ActionToCreate = Pick<Action, "userId" | "type" | "title">;
 
 export type CreateActionsRequest = ActionToCreate[];
+
+export type GetActionsByTypeRequest = { type: ActionType; userId: number }

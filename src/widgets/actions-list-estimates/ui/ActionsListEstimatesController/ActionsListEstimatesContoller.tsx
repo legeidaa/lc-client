@@ -1,15 +1,56 @@
 import { ChangeEvent, FC, useEffect, useState } from "react";
 import styles from "./ActionsListEstimatesContoller.module.scss";
-import { Action, useUpdateActionsMutation } from "@/entities/action";
+import {
+    Action,
+    useLazyGetActionsByTypeQuery,
+    useUpdateActionsMutation,
+} from "@/entities/action";
 import { LoadingSpinner } from "@/shared/components/LoadingSpinner/LoadingSpinner";
 import { useGetActionsListData } from "@/entities/action/methods/useGetActionsListData";
 import { InputsListEstimates } from "../InputsListEstimates/InputsListEstimates";
 import { updateLocalActionEstimate } from "../../utils/updateLocalActionEstimate";
+import { GetActionsByTypeRequest } from "@/entities/action/model/types";
 
+interface ActionsListEstimatesContollerProps {
+    actionsToFetch: GetActionsByTypeRequest[];
+}
 
-export const ActionsListEstimatesContoller: FC = () => {
-    const { actions, isActionsLoadingSuccess, isPartnerPrToPlPage } =
-        useGetActionsListData();
+export const ActionsListEstimatesContoller: FC<
+    ActionsListEstimatesContollerProps
+> = (props) => {
+    const { actionsToFetch } = props;
+
+    // useGetActionsListData(actionsToFetch);
+
+    const [getActions, { data, isUninitialized }] =
+        useLazyGetActionsByTypeQuery();
+
+    useEffect(() => {
+        let resultInfo = [];
+        let resultActions = [];
+
+        if (actionsToFetch && isUninitialized) {
+            const promises = actionsToFetch.map((req) => {
+                return getActions(req);
+            });
+            Promise.all(promises)
+                .then((res) => {
+                    res.forEach((fetchedData) => {
+                        resultInfo.push(fetchedData);
+                        if (fetchedData.data) {
+                            resultActions.push(...fetchedData.data);
+                        }
+                    });
+                })
+                .then(() => {
+                    console.log(resultActions, resultInfo);
+                });
+        }
+    }, [actionsToFetch, data, isUninitialized, getActions]);
+
+    const actions = [];
+    const isActionsLoadingSuccess = false;
+    const isPartnerPrToPlPage = true;
 
     const [
         updateActions,
@@ -83,7 +124,7 @@ export const ActionsListEstimatesContoller: FC = () => {
             } else {
                 return action.estimate === null;
             }
-        });        
+        });
 
         if (isSomeFieldsEmpty) {
             setIsSomeFieldsEmpty(true);

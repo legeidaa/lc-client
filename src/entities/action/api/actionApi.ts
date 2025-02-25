@@ -1,6 +1,6 @@
 
 import { emptyGameApi } from "@/shared/api";
-import { Action, CreateActionsRequest } from "../model/types";
+import { Action, CreateActionsRequest, GetActionsByTypeRequest } from "../model/types";
 
 const actionApi = emptyGameApi.injectEndpoints({
     endpoints: (builder) => ({
@@ -31,7 +31,7 @@ const actionApi = emptyGameApi.injectEndpoints({
 
         getActionsByType: builder.query<
             Action[],
-            { type: string; userId: number }
+            GetActionsByTypeRequest
         >({
             query: ({ type, userId }) => {
                 return `action/by-type?userId=${userId}&type=${type}`;
